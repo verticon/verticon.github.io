@@ -2,12 +2,12 @@
 #      Main Configs       #
 # ----------------------- #
 
-url: http://yoursite.com
-title: My Octopress Blog
-subtitle: A blogging framework for hackers.
-author: Your Name
+url: http://verticon.github.io
+title: Adventures In iLand
+subtitle: What doesn't kill us makes us stronger.
+author: Verticon
 simple_search: https://www.google.com/search
-description:
+description: The insights and hard earned lessons of an evolving human being / iOS developer.
 
 # Default date format is "ordinal" (resulting in "July 22nd 2007")
 # You can customize the format as defined in

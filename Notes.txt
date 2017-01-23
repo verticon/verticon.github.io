@@ -1,0 +1,42 @@
+The root directory (verticon.io) has a .git folder. The _deploy sub-directory also has a .git folder.
+
+~/verticon.io$git remote -v
+octopress	git://github.com/imathis/octopress.git (fetch)
+octopress	git://github.com/imathis/octopress.git (push)
+origin	https://github.com/verticon/verticon.github.io.git (fetch)
+origin	https://github.com/verticon/verticon.github.io.git (push)
+~/verticon.io$git branch
+* source
+~/verticon.io$cd _deploy
+~/verticon.io/_deploy$git remote -v
+origin	https://github.com/verticon/verticon.github.io.git (fetch)
+origin	https://github.com/verticon/verticon.github.io.git (push)
+~/verticon.io/_deploy$git branch
+* master
+
+******************************************************************************************************************
+
+"rake generate" generates the public folder from the source folder.
+
+"rake deploy" copies the public folder to the _deploy folder, commits the changes nd pushes them to github.
+
+******************************************************************************************************************
+
+I had it happen that executing "bundle exec rake deploy" resulted in:
+
+## Committing: Site updated at 2017-01-23 22:11:06 UTC
+[master a58ed16] Site updated at 2017-01-23 22:11:06 UTC
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+## Pushing generated _deploy website
+To https://github.com/verticon/verticon.github.io.git
+ ! [rejected]        master -> master (non-fast-forward)
+error: failed to push some refs to 'https://github.com/verticon/verticon.github.io.git'
+hint: Updates were rejected because the tip of your current branch is behind
+hint: its remote counterpart. Integrate the remote changes (e.g.
+hint: 'git pull ...') before pushing again.
+hint: See the 'Note about fast-forwards' in 'git push --help' for details.
+
+The local and remote master branches had gotten out of sync becuase the CNAME file had been added on the github side. I fixed it by changing into _deploy and issuing "git pull origin master". I read that "git reset --hard origin/master" would also work. However, because "rake deploy" removes all of the files from the _deploy directory CNAME was lost and had to be recreated on the github side which just set up the same scenario again. The ultimate fix was to add CNAM<E to the source folder.
+
+******************************************************************************************************************
