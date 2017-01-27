@@ -4,8 +4,9 @@
 
 //$header-bg: #263347;
 //$subtitle-color: lighten($header-bg, 58);
-//$subtitle-color: #657b83;
-//$nav-bg: desaturate(lighten(#8fc17a, 18), 5);
+$title-color: #cb4b16;
+$subtitle-color: darken($title-color, 12);
+$nav-bg: desaturate(lighten(#b58900, 30), 5);
 //$nav-bg-front: image-url('noise.png');
 //$nav-bg-back: linear-gradient(lighten($nav-bg, 8), $nav-bg, darken($nav-bg, 11));
 //$sidebar-bg: desaturate(#eceff5, 8);

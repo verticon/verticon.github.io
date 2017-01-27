@@ -112,6 +112,7 @@ $('document').ready(function() {
   addCodeLineNumbers();
   getNav();
   addSidebarToggler();
+  $('body').addClass('collapse-sidebar'); // Start with sidebar collapsed. Added by Robert.
 });
 
 // iOS scaling bug fix

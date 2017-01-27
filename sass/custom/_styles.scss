@@ -6,3 +6,13 @@ header[role="banner"] {
      background-size: cover;
      background-position: center;
 }
+
+//.gist {
+//   max-width:350px;
+//   overflow:auto;
+//}
+
+.gist .blob-wrapper.data {
+   max-height:350px;
+   overflow:auto;
+}

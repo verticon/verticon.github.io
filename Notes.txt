@@ -1,4 +1,4 @@
-The root directory (verticon.io) has a .git folder. The _deploy sub-directory also has a .git folder.
+The root directory (verticon.io) has a .git folder. Here the branch is set to source which is where we save the site source.
 
 ~/verticon.io$git remote -v
 octopress	git://github.com/imathis/octopress.git (fetch)
@@ -7,6 +7,10 @@ origin	https://github.com/verticon/verticon.github.io.git (fetch)
 origin	https://github.com/verticon/verticon.github.io.git (push)
 ~/verticon.io$git branch
 * source
+
+
+The _deploy sub-directory also has a .git folder. Here the branch is set to master which is where we save the generated site and which is the repo branch that github pages uses to display the site.
+
 ~/verticon.io$cd _deploy
 ~/verticon.io/_deploy$git remote -v
 origin	https://github.com/verticon/verticon.github.io.git (fetch)
@@ -37,6 +41,37 @@ hint: its remote counterpart. Integrate the remote changes (e.g.
 hint: 'git pull ...') before pushing again.
 hint: See the 'Note about fast-forwards' in 'git push --help' for details.
 
-The local and remote master branches had gotten out of sync becuase the CNAME file had been added on the github side. I fixed it by changing into _deploy and issuing "git pull origin master". I read that "git reset --hard origin/master" would also work. However, because "rake deploy" removes all of the files from the _deploy directory CNAME was lost and had to be recreated on the github side which just set up the same scenario again. The ultimate fix was to add CNAM<E to the source folder.
+The local and remote masters had gotten out of sync becuase the CNAME file had been added on the github side. I fixed it by changing into _deploy and issuing "git pull origin master". I read that "git reset --hard origin/master" would also work.
+
+However, because "rake deploy" removes all of the files from the _deploy directory CNAME was lost and had to be recreated on the github side which just set up the same scenario again. The ultimate fix was to add CNAME to the source folder.
+
+******************************************************************************************************************
+
+I modified octopress.js so as to start with the sidebar collapsed.
+
+$('document').ready(function() {
+  testFeatures();
+  wrapFlashVideos();
+  flashVideoFallback();
+  addCodeLineNumbers();
+  getNav();
+  addSidebarToggler();
+  $('body').addClass('collapse-sidebar'); // Start with sidebar collapsed. Added by Robert.
+});
+
+
+******************************************************************************************************************
+
+I got rid of the RSS feed button
+
+1) I added a show_rss variable to _config.yml
+2) I modified navigation.html so as to optionally show the button based on the show_rss setting
+
+******************************************************************************************************************
+
+I modified custom/_styles.scss to:
+
+1) Display an image in the header
+2) Limit the height of a gist. Gists which exceed the height become scrollable
 
 ******************************************************************************************************************
