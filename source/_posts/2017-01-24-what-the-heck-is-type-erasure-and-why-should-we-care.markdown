@@ -3,10 +3,14 @@ layout: post
 title: "What the heck is Type Erasure and why should we care?"
 date: 2017-01-24 17:14:59 -0500
 comments: true
-categories:
+categories: [ios,swift,protocols,generics]
+keywords: ios,swift,protocols,generics
+description: How to use type erasure to overcome the limitations of swift's generic protocols
 ---
 
 We are all unique individuals whose minds process and organize information in different ways, and whose communication styles reflect that internal organization. When I first encountered the words **Type Erasure** I thought: *"Oh, some cool swifty thing. I'd better find out about it"*. So, I started googling and reading. But, time and again, I came up short. Even though I (mostly) understood what I had read, my understanding felt incomplete. There seemed to be something missing, as though the author had not made some essential concept clear. However, I persevered and now I get it. So for this, my first ever blog post, I'm going to take a shot at explaining type erasure. Maybe it will help someone else who thinks differently.
+
+<!-- more -->
 
 ## Generic Protocols Have Some Limitations
 

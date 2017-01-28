@@ -75,3 +75,12 @@ I modified custom/_styles.scss to:
 2) Limit the height of a gist. Gists which exceed the height become scrollable
 
 ******************************************************************************************************************
+
+I modified the Rakefile's new_post task so that the yaml front matter would include the keys "keywords" and "description"
+
+******************************************************************************************************************
+
+I added a keywords entry to _config.yml. I then modified source/_include/head.html to use the site description 
+and keywords if they are not specified by the page.
+
+******************************************************************************************************************
