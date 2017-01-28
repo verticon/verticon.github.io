@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Protocols | Adventures In iLand]]></title>
   <link href="http://verticon.github.io/blog/categories/protocols/atom.xml" rel="self"/>
   <link href="http://verticon.github.io/"/>
-  <updated>2017-01-28T13:21:38-05:00</updated>
+  <updated>2017-01-28T13:27:38-05:00</updated>
   <id>http://verticon.github.io/</id>
   <author>
     <name><![CDATA[Verticon]]></name>
@@ -278,9 +278,9 @@ army.makeWar()
 
 <p>Voila! All weapons are firing. Let there be war.</p>
 
-<h2 id="wrap-up">Wrap Up</h2>
+<h2 id="wrapping-it-up">Wrapping It Up</h2>
 
-<p>An AnySoldier is able to <em>assume the Soldier identity</em> of any adopter of the Soldier protocol (Sniper, Infantryman, Grenadier, or Artillaryman). The AnySoldier accomplishes this without any reference to the original type. That original type has dissappeared from view; <strong>it has been erased</strong>. With AnySoldier at our disposal we can write code that is equivalent what we would have written were we able to use Soldier to specify types. AFAIK there is no functional difference between specifying types with AnySoldier vs Soldier (given that we were allowed to). I would hazard to say that if a future swift allowed us to use generic protocols as type specifiers then a find/replace AnySodier =&gt; Soldier would do the trick. This is why we care about type erasure.</p>
+<p>An AnySoldier is able to <em>assume the Soldier identity</em> of any adopter of the Soldier protocol (Sniper, Infantryman, Grenadier, or Artillaryman). The AnySoldier accomplishes this without any reference to the original type. That original type has dissappeared from view; <strong>it has been erased</strong>. With AnySoldier at our disposal we can write code that is equivalent to what we would have written were we able to use Soldier to specify types. AFAIK there is no functional difference between specifying types with AnySoldier vs Soldier (given that we were allowed to). I would hazard to say that if a future swift allowed us to use generic protocols as type specifiers then a find/replace AnySoldier =&gt; Soldier would do the trick. This is why we care about type erasure.</p>
 
 <p>There you have it. Type Erasure a la Verticon. I hope that it spoke to you. As I said, this is my first blog post. I expect to learn and to get better at it. Any feedback will be welcome. For those of you whose different way of thinking is different from mine, here are some other posts on the same topic:</p>
 <ul>
