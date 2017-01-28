@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
 
-  <title><![CDATA[Adventures In iLand]]></title>
-  <link href="http://verticon.github.io/atom.xml" rel="self"/>
+  <title><![CDATA[Category: Ios | Adventures In iLand]]></title>
+  <link href="http://verticon.github.io/blog/categories/ios/atom.xml" rel="self"/>
   <link href="http://verticon.github.io/"/>
   <updated>2017-01-28T10:16:09-05:00</updated>
   <id>http://verticon.github.io/</id>
@@ -26,7 +26,7 @@
 
 <p>Swift’s implementation of generic protocols comes with some limitations. We cannot use generic protocols in all of the ways that we are accustomed to using regular protocols. Let’s have a look. Here are some ways in which we normally use a protocol:</p>
 
-<div><script src="https://gist.github.com/0912a5667b684b0b6894ab021f59e6d5.js?file=RegularProtocol.swift"></script>
+<p><div><script src='https://gist.github.com/0912a5667b684b0b6894ab021f59e6d5.js?file=RegularProtocol.swift'></script>
 <noscript><pre><code>protocol MyProtocol {} // Regular protocols
 class MyAdopter : MyProtocol {} // can be adopted,
 func myGenericFunction&lt;T : MyProtocol&gt;(arg: T) {} // or used to constrain generic type parameters
@@ -34,12 +34,12 @@ var myVariable: MyProtocol // or used to specify the type of a variable,
 func myFuction(arg: MyProtocol) {} // function parameter,
 func myFuction() -&gt; MyProtocol { return MyAdopter() } // or function result.
 </code></pre></noscript></div>
-
-<p><img src="http://verticon.github.io/images/blog/2017/01/24/what-the-heck-is-type-erasure-and-why-should-we-care/RegularProtocol.png" /></p>
+<br />
+<img src="/images/blog/2017/01/24/what-the-heck-is-type-erasure-and-why-should-we-care/RegularProtocol.png"></p>
 
 <p>As you can see in the REPL screen shot, the compiler is happy with the code. However, when we use a generic protocol the results are different:</p>
 
-<div><script src="https://gist.github.com/0912a5667b684b0b6894ab021f59e6d5.js?file=GenericProtocol.swift"></script>
+<p><div><script src='https://gist.github.com/0912a5667b684b0b6894ab021f59e6d5.js?file=GenericProtocol.swift'></script>
 <noscript><pre><code>protocol MyProtocol { associatedtype MyType } // Generic protocols
 class MyAdopter : MyProtocol { typealias MyType = String } // can be adopted,
 func myGenericFunction&lt;T : MyProtocol&gt;(arg: T) {} // or used to constrain generic type parameters.
@@ -48,8 +48,8 @@ var myVariable: MyProtocol // But cannot be used to specify the type of a variab
 func myFuction(arg: MyProtocol) {} // function parameter,
 func myFuction() -&gt; MyProtocol { return MyAdopter() } // or function result.
 </code></pre></noscript></div>
-
-<p><img src="http://verticon.github.io/images/blog/2017/01/24/what-the-heck-is-type-erasure-and-why-should-we-care/GenericProtocol.png" /></p>
+<br />
+<img src="/images/blog/2017/01/24/what-the-heck-is-type-erasure-and-why-should-we-care/GenericProtocol.png"></p>
 
 <p>Now we have the infamous <em>“error: protocol ‘MyProtocol’ can only be used as a generic constraint because it has Self or associated type requirements”</em> compiler error on lines 4, 5, &amp; 6. We are not allowed to use a generic protocol as a type specfier. Why?</p>
 
@@ -57,7 +57,7 @@ func myFuction() -&gt; MyProtocol { return MyAdopter() } // or function result.
 
 <h2 id="an-example-wherein-we-would-like-to-use-generic-protocols-to-specify-types">An Example Wherein We Would Like To Use Generic Protocols To Specify Types</h2>
 
-<div><script src="https://gist.github.com/0912a5667b684b0b6894ab021f59e6d5.js?file=SoldiersAndWeapons.swift"></script>
+<p><div><script src='https://gist.github.com/0912a5667b684b0b6894ab021f59e6d5.js?file=SoldiersAndWeapons.swift'></script>
 <noscript><pre><code>// Soldiers use their weapons to fight
 
 protocol Weapon {
@@ -111,10 +111,11 @@ struct Grenadier : Soldier {
     var weapon = GrenadeLauncher()
 }
 </code></pre></noscript></div>
+</p>
 
 <p>We can create an army of infantry men, or grenadiers, or etc. But we cannot create an army of soldiers.</p>
 
-<div><script src="https://gist.github.com/0912a5667b684b0b6894ab021f59e6d5.js?file=ProblematicArmy.swift"></script>
+<p><div><script src='https://gist.github.com/0912a5667b684b0b6894ab021f59e6d5.js?file=ProblematicArmy.swift'></script>
 <noscript><pre><code>// Let&#39;s create an army of soldiers
 //
 // Error: The compiler will not let us use Soldier as a type
@@ -130,8 +131,8 @@ class Army {
     }
 }
 </code></pre></noscript></div>
-
-<p><img src="http://verticon.github.io/images/blog/2017/01/24/what-the-heck-is-type-erasure-and-why-should-we-care/ProblematicArmy.png" /></p>
+<br />
+<img src="/images/blog/2017/01/24/what-the-heck-is-type-erasure-and-why-should-we-care/ProblematicArmy.png"></p>
 
 <h2 id="type-erasure-to-the-rescue">Type Erasure To The Rescue.</h2>
 
@@ -143,7 +144,7 @@ class Army {
 
 <p>Let’s start developing AnySoldier. In order for AnySoldier to adopt the Soldier protocol it must specify the type of Weapon. How shall we handle this? Well, we could make AnySoldier generic with regard to the type of Weapon.</p>
 
-<div><script src="https://gist.github.com/0912a5667b684b0b6894ab021f59e6d5.js?file=AnySoldierFirstPass.swift"></script>
+<p><div><script src='https://gist.github.com/0912a5667b684b0b6894ab021f59e6d5.js?file=AnySoldierFirstPass.swift'></script>
 <noscript><pre><code>struct AnySoldier&lt;W: Weapon&gt; : Soldier {
     var weapon: W
     
@@ -171,8 +172,8 @@ army.join(soldier: AnySoldier(soldier: Sniper()))
 army.join(soldier: AnySoldier(soldier: Infantryman()))
 army.join(soldier: AnySoldier(soldier: Grenadier()))
 </code></pre></noscript></div>
-
-<p><img src="http://verticon.github.io/images/blog/2017/01/24/what-the-heck-is-type-erasure-and-why-should-we-care/AnySoldierFirstPass.png" /></p>
+<br />
+<img src="/images/blog/2017/01/24/what-the-heck-is-type-erasure-and-why-should-we-care/AnySoldierFirstPass.png"></p>
 
 <p>Well, that’s not what we want. We weren’t able to add a Grenadier to the army. We can create an army of any type of soldier as long as they all use the same type of Weapon (in this case Rifle). We’ve moved our issue from the Soldier to the Weapon. What can we do?</p>
 
@@ -180,7 +181,7 @@ army.join(soldier: AnySoldier(soldier: Grenadier()))
 
 <p>How about if we type erase Weapon as well? Let’s create an AnyWeapon.</p>
 
-<div><script src="https://gist.github.com/0912a5667b684b0b6894ab021f59e6d5.js?file=AnySoldierSecondPass.swift"></script>
+<p><div><script src='https://gist.github.com/0912a5667b684b0b6894ab021f59e6d5.js?file=AnySoldierSecondPass.swift'></script>
 <noscript><pre><code>struct AnyWeapon : Weapon {
     
     init(weapon: Weapon) {}
@@ -217,8 +218,8 @@ army.join(soldier: AnySoldier(soldier: Grenadier()))
 army.join(soldier: AnySoldier(soldier: Artillaryman()))
 army.makeWar()
 </code></pre></noscript></div>
-
-<p><img src="http://verticon.github.io/images/blog/2017/01/24/what-the-heck-is-type-erasure-and-why-should-we-care/AnySoldierSecondPass.png" /></p>
+<br />
+<img src="/images/blog/2017/01/24/what-the-heck-is-type-erasure-and-why-should-we-care/AnySoldierSecondPass.png"></p>
 
 <p>There we go; the compiler is happy. We can create an army and populate it with any and all types of Soldiers. Great! But wait a minute: the weapons aren’t firing (i.e. the print statements are not coming to the terminal). What is going on?</p>
 
@@ -226,7 +227,7 @@ army.makeWar()
 
 <p>Well, remember that we said: “AnySoldier will <em>capture</em> the actual soldier’s implementation of the Soldier protocol”. We havn’t yet implemented the captures. Time for the magic sauce.</p>
 
-<div><script src="https://gist.github.com/0912a5667b684b0b6894ab021f59e6d5.js?file=AnySoldierFinalSolution.swift"></script>
+<p><div><script src='https://gist.github.com/0912a5667b684b0b6894ab021f59e6d5.js?file=AnySoldierFinalSolution.swift'></script>
 <noscript><pre><code>struct AnyWeapon : Weapon {
     private let _fire: (String) -&gt; Void
     
@@ -272,8 +273,8 @@ army.join(soldier: AnySoldier(soldier: Grenadier()))
 army.join(soldier: AnySoldier(soldier: Artillaryman()))
 army.makeWar()
 </code></pre></noscript></div>
-
-<p><img src="http://verticon.github.io/images/blog/2017/01/24/what-the-heck-is-type-erasure-and-why-should-we-care/AnySoldierFinalSolution.png" /></p>
+<br />
+<img src="/images/blog/2017/01/24/what-the-heck-is-type-erasure-and-why-should-we-care/AnySoldierFinalSolution.png"></p>
 
 <p>Voila! All weapons are firing. Let there be war.</p>
 

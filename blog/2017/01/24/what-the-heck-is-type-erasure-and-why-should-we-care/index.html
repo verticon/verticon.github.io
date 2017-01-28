@@ -1,24 +1,87 @@
-<?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom">
 
-  <title><![CDATA[Adventures In iLand]]></title>
-  <link href="http://verticon.github.io/atom.xml" rel="self"/>
-  <link href="http://verticon.github.io/"/>
-  <updated>2017-01-28T10:16:09-05:00</updated>
-  <id>http://verticon.github.io/</id>
-  <author>
-    <name><![CDATA[Verticon]]></name>
-    
-  </author>
-  <generator uri="http://octopress.org/">Octopress</generator>
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>What the Heck Is Type Erasure and Why Should We Care? - Adventures In iLand</title>
+  <meta name="author" content="Verticon">
 
   
-  <entry>
-    <title type="html"><![CDATA[What the Heck Is Type Erasure and Why Should We Care?]]></title>
-    <link href="http://verticon.github.io/blog/2017/01/24/what-the-heck-is-type-erasure-and-why-should-we-care/"/>
-    <updated>2017-01-24T17:14:59-05:00</updated>
-    <id>http://verticon.github.io/blog/2017/01/24/what-the-heck-is-type-erasure-and-why-should-we-care</id>
-    <content type="html"><![CDATA[<p>We are all unique individuals whose minds process and organize information in different ways, and whose communication styles reflect that internal organization. When I first encountered the words <strong>Type Erasure</strong> I thought: <em>“Oh, some cool swifty thing. I’d better find out about it”</em>. So, I started googling and reading. But, time and again, I came up short. Even though I (mostly) understood what I had read, my understanding felt incomplete. There seemed to be something missing, as though the author had not made some essential concept clear. However, I persevered and now I get it. So for this, my first ever blog post, I’m going to take a shot at explaining type erasure. Maybe it will help someone else who thinks differently.</p>
+  <meta name="description" content="How to use type erasure to overcome the limitations of swift's generic protocols">
+  <meta name="keywords" content="ios,swift,protocols,generics">
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://verticon.github.io/blog/2017/01/24/what-the-heck-is-type-erasure-and-why-should-we-care/">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="Adventures In iLand" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="/javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="//fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="//fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">Adventures In iLand</a></h1>
+  
+    <h2>What doesn't kill us makes us stronger.</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation">  
+  
+<form action="https://www.google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="sitesearch" value="verticon.github.io">
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">What the Heck Is Type Erasure and Why Should We Care?</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2017-01-24T17:14:59-05:00'><span class='date'><span class='date-month'>Jan</span> <span class='date-day'>24</span><span class='date-suffix'>th</span>, <span class='date-year'>2017</span></span> <span class='time'>5:14 pm</span></time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>We are all unique individuals whose minds process and organize information in different ways, and whose communication styles reflect that internal organization. When I first encountered the words <strong>Type Erasure</strong> I thought: <em>“Oh, some cool swifty thing. I’d better find out about it”</em>. So, I started googling and reading. But, time and again, I came up short. Even though I (mostly) understood what I had read, my understanding felt incomplete. There seemed to be something missing, as though the author had not made some essential concept clear. However, I persevered and now I get it. So for this, my first ever blog post, I’m going to take a shot at explaining type erasure. Maybe it will help someone else who thinks differently.</p>
 
 <!-- more -->
 
@@ -35,7 +98,7 @@ func myFuction(arg: MyProtocol) {} // function parameter,
 func myFuction() -&gt; MyProtocol { return MyAdopter() } // or function result.
 </code></pre></noscript></div>
 
-<p><img src="http://verticon.github.io/images/blog/2017/01/24/what-the-heck-is-type-erasure-and-why-should-we-care/RegularProtocol.png" /></p>
+<p><img src="/images/blog/2017/01/24/what-the-heck-is-type-erasure-and-why-should-we-care/RegularProtocol.png" /></p>
 
 <p>As you can see in the REPL screen shot, the compiler is happy with the code. However, when we use a generic protocol the results are different:</p>
 
@@ -49,7 +112,7 @@ func myFuction(arg: MyProtocol) {} // function parameter,
 func myFuction() -&gt; MyProtocol { return MyAdopter() } // or function result.
 </code></pre></noscript></div>
 
-<p><img src="http://verticon.github.io/images/blog/2017/01/24/what-the-heck-is-type-erasure-and-why-should-we-care/GenericProtocol.png" /></p>
+<p><img src="/images/blog/2017/01/24/what-the-heck-is-type-erasure-and-why-should-we-care/GenericProtocol.png" /></p>
 
 <p>Now we have the infamous <em>“error: protocol ‘MyProtocol’ can only be used as a generic constraint because it has Self or associated type requirements”</em> compiler error on lines 4, 5, &amp; 6. We are not allowed to use a generic protocol as a type specfier. Why?</p>
 
@@ -131,7 +194,7 @@ class Army {
 }
 </code></pre></noscript></div>
 
-<p><img src="http://verticon.github.io/images/blog/2017/01/24/what-the-heck-is-type-erasure-and-why-should-we-care/ProblematicArmy.png" /></p>
+<p><img src="/images/blog/2017/01/24/what-the-heck-is-type-erasure-and-why-should-we-care/ProblematicArmy.png" /></p>
 
 <h2 id="type-erasure-to-the-rescue">Type Erasure To The Rescue.</h2>
 
@@ -172,7 +235,7 @@ army.join(soldier: AnySoldier(soldier: Infantryman()))
 army.join(soldier: AnySoldier(soldier: Grenadier()))
 </code></pre></noscript></div>
 
-<p><img src="http://verticon.github.io/images/blog/2017/01/24/what-the-heck-is-type-erasure-and-why-should-we-care/AnySoldierFirstPass.png" /></p>
+<p><img src="/images/blog/2017/01/24/what-the-heck-is-type-erasure-and-why-should-we-care/AnySoldierFirstPass.png" /></p>
 
 <p>Well, that’s not what we want. We weren’t able to add a Grenadier to the army. We can create an army of any type of soldier as long as they all use the same type of Weapon (in this case Rifle). We’ve moved our issue from the Soldier to the Weapon. What can we do?</p>
 
@@ -218,7 +281,7 @@ army.join(soldier: AnySoldier(soldier: Artillaryman()))
 army.makeWar()
 </code></pre></noscript></div>
 
-<p><img src="http://verticon.github.io/images/blog/2017/01/24/what-the-heck-is-type-erasure-and-why-should-we-care/AnySoldierSecondPass.png" /></p>
+<p><img src="/images/blog/2017/01/24/what-the-heck-is-type-erasure-and-why-should-we-care/AnySoldierSecondPass.png" /></p>
 
 <p>There we go; the compiler is happy. We can create an army and populate it with any and all types of Soldiers. Great! But wait a minute: the weapons aren’t firing (i.e. the print statements are not coming to the terminal). What is going on?</p>
 
@@ -273,7 +336,7 @@ army.join(soldier: AnySoldier(soldier: Artillaryman()))
 army.makeWar()
 </code></pre></noscript></div>
 
-<p><img src="http://verticon.github.io/images/blog/2017/01/24/what-the-heck-is-type-erasure-and-why-should-we-care/AnySoldierFinalSolution.png" /></p>
+<p><img src="/images/blog/2017/01/24/what-the-heck-is-type-erasure-and-why-should-we-care/AnySoldierFinalSolution.png" /></p>
 
 <p>Voila! All weapons are firing. Let there be war.</p>
 
@@ -285,7 +348,123 @@ army.makeWar()
   <li><a href="https://krakendev.io/blog/generic-protocols-and-their-shortcomings">Hector Matos</a></li>
 </ul>
 
-]]></content>
-  </entry>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
   
-</feed>
+
+<span class="byline author vcard">Posted by <span class="fn">Verticon</span></span>
+
+      
+
+
+
+
+<time class='entry-date' datetime='2017-01-24T17:14:59-05:00'><span class='date'><span class='date-month'>Jan</span> <span class='date-day'>24</span><span class='date-suffix'>th</span>, <span class='date-year'>2017</span></span> <span class='time'>5:14 pm</span></time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/generics/'>generics</a>, <a class='category' href='/blog/categories/ios/'>ios</a>, <a class='category' href='/blog/categories/protocols/'>protocols</a>, <a class='category' href='/blog/categories/swift/'>swift</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://verticon.github.io/blog/2017/01/24/what-the-heck-is-type-erasure-and-why-should-we-care/" data-via="" data-counturl="http://verticon.github.io/blog/2017/01/24/what-the-heck-is-type-erasure-and-why-should-we-care/" >Tweet</a>
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+      
+    </p>
+  </footer>
+</article>
+
+  <section>
+    <h1>Comments</h1>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+  </section>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2017/01/24/what-the-heck-is-type-erasure-and-why-should-we-care/">What the Heck Is Type Erasure and Why Should We Care?</a>
+      </li>
+    
+  </ul>
+</section>
+
+
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2017 - Verticon -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+<script type="text/javascript">
+      var disqus_shortname = 'verticon';
+      
+        
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://verticon.github.io/blog/2017/01/24/what-the-heck-is-type-erasure-and-why-should-we-care/';
+        var disqus_url = 'http://verticon.github.io/blog/2017/01/24/what-the-heck-is-type-erasure-and-why-should-we-care/';
+        var disqus_script = 'embed.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = '//' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>
