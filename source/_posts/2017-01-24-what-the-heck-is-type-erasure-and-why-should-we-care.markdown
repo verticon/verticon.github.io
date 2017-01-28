@@ -70,7 +70,9 @@ Well, remember that we said: "AnySoldier will *capture* the actual soldier's imp
 
 Voila! All weapons are firing. Let there be war.
 
-## Wrap Up
+## Wrapping It Up
+
+An AnySoldier is able to *assume the Soldier identity* of any adopter of the Soldier protocol (Sniper, Infantryman, Grenadier, or Artillaryman). The AnySoldier accomplishes this without any reference to the original type. That original type has dissappeared from view; **it has been erased**. With AnySoldier at our disposal we can write code that is equivalent to what we would have written were we able to use Soldier to specify types. AFAIK there is no functional difference between specifying types with AnySoldier vs Soldier (given that we were allowed to). I would hazard to say that if a future swift allowed us to use generic protocols as type specifiers then a find/replace AnySoldier => Soldier would do the trick. This is why we care about type erasure.
 
 There you have it. Type Erasure a la Verticon. I hope that it spoke to you. As I said, this is my first blog post. I expect to learn and to get better at it. Any feedback will be welcome. For those of you whose different way of thinking is different from mine, here are some other posts on the same topic:
 * [Rob Napier](http://robnapier.net/erasure)
