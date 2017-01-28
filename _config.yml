@@ -15,6 +15,8 @@ description: The insights and hard won lessons of an evolving human being / iOS 
 # Additionally, %o will give you the ordinal representation of the day
 date_format: "ordinal"
 
+show_rss: false
+
 # RSS / Email (optional) subscription links (change if using something like Feedburner)
 subscribe_rss: /atom.xml
 subscribe_email:
@@ -45,8 +47,6 @@ excerpt_link: "Read on &rarr;"  # "Continue reading" link text at the bottom of 
 excerpt_separator: "<!--more-->"
 
 titlecase: true       # Converts page and post titles to titlecase
-
-show_rss: false
 
 # sidebar: collapse # This will cause the sidebar to disappear entirely; i.e. the button whereby it could be expanded will not be present.
 
@@ -92,7 +92,7 @@ delicious_user:
 delicious_count: 3
 
 # Disqus Comments
-disqus_short_name:
+disqus_short_name: verticon
 disqus_show_comment_count: false
 
 # Google Analytics

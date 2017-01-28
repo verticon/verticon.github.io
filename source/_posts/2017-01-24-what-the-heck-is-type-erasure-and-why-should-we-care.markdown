@@ -68,7 +68,7 @@ Voila! All weapons are firing. Let there be war.
 
 ## Wrap Up
 
-There you have it. Type Erasure explained a la Verticon. I hope that it spoke to you. As I said, this is my first blog post. I expect to learn and to get better at it. Any feedback will be welcome. For those of you whose different way of thinking is different from mine, here are some other posts on the same topic:
+There you have it. Type Erasure a la Verticon. I hope that it spoke to you. As I said, this is my first blog post. I expect to learn and to get better at it. Any feedback will be welcome. For those of you whose different way of thinking is different from mine, here are some other posts on the same topic:
 * [Rob Napier](http://robnapier.net/erasure)
 * [Hector Matos](https://krakendev.io/blog/generic-protocols-and-their-shortcomings)
 
