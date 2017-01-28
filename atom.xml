@@ -4,7 +4,7 @@
   <title><![CDATA[Adventures In iLand]]></title>
   <link href="http://verticon.github.io/atom.xml" rel="self"/>
   <link href="http://verticon.github.io/"/>
-  <updated>2017-01-28T11:49:37-05:00</updated>
+  <updated>2017-01-28T12:53:06-05:00</updated>
   <id>http://verticon.github.io/</id>
   <author>
     <name><![CDATA[Verticon]]></name>
@@ -278,6 +278,8 @@ army.makeWar()
 <p>Voila! All weapons are firing. Let there be war.</p>
 
 <h2 id="wrap-up">Wrap Up</h2>
+
+<p>An AnySoldier is able to <em>assume the Soldier identity</em> of any adopter of the Soldier protocol (Sniper, Infantryman, Grenadier, or Artillaryman). The AnySoldier accomplishes this without any reference to the original type. That original type has dissappeared from view; <strong>it has been erased</strong>.</p>
 
 <p>There you have it. Type Erasure a la Verticon. I hope that it spoke to you. As I said, this is my first blog post. I expect to learn and to get better at it. Any feedback will be welcome. For those of you whose different way of thinking is different from mine, here are some other posts on the same topic:</p>
 <ul>
