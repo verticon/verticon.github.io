@@ -17,12 +17,12 @@ We are all unique individuals whose minds process and organize information in di
 Swift's implementation of generic protocols comes with some limitations. We cannot use generic protocols in all of the ways that we are accustomed to using regular protocols. Let's have a look. Here are some ways in which we normally use a protocol:
 
 {% gist 0912a5667b684b0b6894ab021f59e6d5 RegularProtocol.swift %}
-{% img /images/blog/2017/01/24/what-the-heck-is-type-erasure-and-why-should-we-care/RegularProtocol.png %}
+[{% img /images/blog/2017/01/24/what-the-heck-is-type-erasure-and-why-should-we-care/RegularProtocol.png %}](/images/blog/2017/01/24/what-the-heck-is-type-erasure-and-why-should-we-care/RegularProtocol.png)
 
 As you can see in the REPL screen shot, the compiler is happy with the code. However, when we use a generic protocol the results are different:
 
 {% gist 0912a5667b684b0b6894ab021f59e6d5 GenericProtocol.swift %}
-{% img /images/blog/2017/01/24/what-the-heck-is-type-erasure-and-why-should-we-care/GenericProtocol.png %}
+[{% img center /images/blog/2017/01/24/what-the-heck-is-type-erasure-and-why-should-we-care/GenericProtocol.png %}](/images/blog/2017/01/24/what-the-heck-is-type-erasure-and-why-should-we-care/GenericProtocol.png)
 
 Now we have the infamous *"error: protocol 'MyProtocol' can only be used as a generic constraint because it has Self or associated type requirements"* compiler error on lines 4, 5, & 6. We are not allowed to use a generic protocol as a type specfier. Why?
 
@@ -35,20 +35,20 @@ Well, from the compiler's perspective the issue is type safety. The compiler doe
 We can create an army of infantry men, or grenadiers, or etc. But we cannot create an army of soldiers.
 
 {% gist 0912a5667b684b0b6894ab021f59e6d5 ProblematicArmy.swift %}
-{% img /images/blog/2017/01/24/what-the-heck-is-type-erasure-and-why-should-we-care/ProblematicArmy.png %}
+[{% img center /images/blog/2017/01/24/what-the-heck-is-type-erasure-and-why-should-we-care/ProblematicArmy.png %}](/images/blog/2017/01/24/what-the-heck-is-type-erasure-and-why-should-we-care/ProblematicArmy.png)
 
-## Type Erasure To The Rescue.
+## Type Erasure To The Rescue
 
 Type Erasure is a coding technique whereby we can work around the type specification limitation of generic protocols. For any given generic protocol, let's call it MyGenericProtocol, we will define an *erasing* type, let's call it MyTypeEraser. MyTypeEraser will adopt MyGenericProtocol and will be used as a substitute for MyGenericProtocol when specifying types: wherever we would have liked to use MyGenericProtocol to specify a type, we will instead use MyTypeEraser. MyTypeEraser will give us all of the benefits of MyGenericProtocol without the limitation. Let's see how this works.
 
-In the case of our Army example, the generic protocol that we are dealing with is Soldier. We will name our type eraser AnySoldier. \[Note that the prefix `Any` followed by the name of the generic protocol is a naming convention that Apple follows in the swift standard library when type erasing is employed: [AnySequence](https://developer.apple.com/reference/swift/anysequence), [AnyCollection](https://developer.apple.com/reference/swift/anycollection), etc.\] An AnySoldier will be initialized using an instance of some other Soldier adopting type (Sniper, Infantryman, etc.). The AnySoldier will *capture* the actual soldier's implementation of the Soldier protocol (you'll soon see what we mean by capture). The AnySoldier and will then be used as a standin for the actual soldier: wherever we need a Soldier adopter such as a Infantryman or a Grenadier, we will instead use the corresponding AnySoldier. Whenever the application accesses an AnySoldier via the Soldier protocol, the AnySoldier will forward that access to the original soldier instance. The concrete AnySoldier type will effectively behave like a Soldier protocol because nothing other than the protocol's interface will be exposed. AnySoldier can be used without the compiler having any knowledge of the original instance's type; that original type **will have been erased**. This will all become more clear as we proceed.
+In the case of our Army example, the generic protocol that we are dealing with is Soldier. We will name our type eraser AnySoldier. \[Note that the prefix `Any` followed by the name of the generic protocol is a naming convention that Apple follows in the swift standard library when type erasing is employed: [AnySequence](https://developer.apple.com/reference/swift/anysequence), [AnyCollection](https://developer.apple.com/reference/swift/anycollection), etc.\] An AnySoldier will be initialized using an instance of some other Soldier adopting type (Sniper, Infantryman, etc.). The AnySoldier will *capture* the actual soldier's implementation of the Soldier protocol (you'll soon see what we mean by capture). The AnySoldier will then be used as a standin for the actual soldier: wherever we need a Soldier adopter such as an Infantryman or a Grenadier, we will instead create and use an AnySoldier. Whenever the application accesses an AnySoldier via the Soldier protocol, the AnySoldier will forward that access to the original soldier instance. The concrete AnySoldier type will effectively behave like a Soldier protocol because nothing other than the protocol's interface will be exposed. AnySoldier can be used without the compiler having any knowledge of the original instance's type; that original type **will have been erased**. This will all become more clear as we proceed.
 
 ## AnySoldier: First Pass
 
 Let's start developing AnySoldier. In order for AnySoldier to adopt the Soldier protocol it must specify the type of Weapon. How shall we handle this? Well, we could make AnySoldier generic with regard to the type of Weapon.
 
 {% gist 0912a5667b684b0b6894ab021f59e6d5 AnySoldierFirstPass.swift %}
-{% img /images/blog/2017/01/24/what-the-heck-is-type-erasure-and-why-should-we-care/AnySoldierFirstPass.png %}
+[{% img center /images/blog/2017/01/24/what-the-heck-is-type-erasure-and-why-should-we-care/AnySoldierFirstPass.png %}](/images/blog/2017/01/24/what-the-heck-is-type-erasure-and-why-should-we-care/AnySoldierFirstPass.png)
 
 Well, that's not what we want. We weren't able to add a Grenadier to the army. We can create an army of any type of soldier as long as they all use the same type of Weapon (in this case Rifle). We've moved our issue from the Soldier to the Weapon. What can we do?
 
@@ -57,16 +57,16 @@ Well, that's not what we want. We weren't able to add a Grenadier to the army. W
 How about if we type erase Weapon as well? Let's create an AnyWeapon.
 
 {% gist 0912a5667b684b0b6894ab021f59e6d5 AnySoldierSecondPass.swift %}
-{% img /images/blog/2017/01/24/what-the-heck-is-type-erasure-and-why-should-we-care/AnySoldierSecondPass.png %}
+[{% img center /images/blog/2017/01/24/what-the-heck-is-type-erasure-and-why-should-we-care/AnySoldierSecondPass.png %}](/images/blog/2017/01/24/what-the-heck-is-type-erasure-and-why-should-we-care/AnySoldierSecondPass.png)
 
 There we go; the compiler is happy. We can create an army and populate it with any and all types of Soldiers. Great! But wait a minute: the weapons aren't firing (i.e. the print statements are not coming to the terminal). What is going on?
 
 ## AnySoldier: Final Solution
 
-Well, remember that we said: "AnySoldier will *capture* the actual soldier's implementation of the Soldier protocol". We havn't yet implemented the captures. Time for the magic sauce.
+Well, remember that we said: "AnySoldier will *capture* the actual soldier's implementation of the Soldier protocol". We haven't yet implemented the captures. Time for the magic sauce.
 
 {% gist 0912a5667b684b0b6894ab021f59e6d5 AnySoldierFinalSolution.swift %}
-{% img /images/blog/2017/01/24/what-the-heck-is-type-erasure-and-why-should-we-care/AnySoldierFinalSolution.png %}
+[{% img center /images/blog/2017/01/24/what-the-heck-is-type-erasure-and-why-should-we-care/AnySoldierFinalSolution.png %}](/images/blog/2017/01/24/what-the-heck-is-type-erasure-and-why-should-we-care/AnySoldierFinalSolution.png)
 
 Voila! All weapons are firing. Let there be war.
 
