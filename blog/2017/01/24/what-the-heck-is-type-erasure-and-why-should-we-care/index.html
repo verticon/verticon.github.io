@@ -98,7 +98,7 @@ func myFuction(arg: MyProtocol) {} // function parameter,
 func myFuction() -&gt; MyProtocol { return MyAdopter() } // or function result.
 </code></pre></noscript></div>
 
-<p><img src="/images/blog/2017/01/24/what-the-heck-is-type-erasure-and-why-should-we-care/RegularProtocol.png" /></p>
+<p><a href="/images/blog/2017/01/24/what-the-heck-is-type-erasure-and-why-should-we-care/RegularProtocol.png"><img src="/images/blog/2017/01/24/what-the-heck-is-type-erasure-and-why-should-we-care/RegularProtocol.png" /></a></p>
 
 <p>As you can see in the REPL screen shot, the compiler is happy with the code. However, when we use a generic protocol the results are different:</p>
 
@@ -112,7 +112,7 @@ func myFuction(arg: MyProtocol) {} // function parameter,
 func myFuction() -&gt; MyProtocol { return MyAdopter() } // or function result.
 </code></pre></noscript></div>
 
-<p><img src="/images/blog/2017/01/24/what-the-heck-is-type-erasure-and-why-should-we-care/GenericProtocol.png" /></p>
+<p><a href="/images/blog/2017/01/24/what-the-heck-is-type-erasure-and-why-should-we-care/GenericProtocol.png"><img class="center" src="/images/blog/2017/01/24/what-the-heck-is-type-erasure-and-why-should-we-care/GenericProtocol.png" /></a></p>
 
 <p>Now we have the infamous <em>“error: protocol ‘MyProtocol’ can only be used as a generic constraint because it has Self or associated type requirements”</em> compiler error on lines 4, 5, &amp; 6. We are not allowed to use a generic protocol as a type specfier. Why?</p>
 
@@ -196,11 +196,11 @@ class Army {
 
 <p><img src="/images/blog/2017/01/24/what-the-heck-is-type-erasure-and-why-should-we-care/ProblematicArmy.png" /></p>
 
-<h2 id="type-erasure-to-the-rescue">Type Erasure To The Rescue.</h2>
+<h2 id="type-erasure-to-the-rescue">Type Erasure To The Rescue</h2>
 
 <p>Type Erasure is a coding technique whereby we can work around the type specification limitation of generic protocols. For any given generic protocol, let’s call it MyGenericProtocol, we will define an <em>erasing</em> type, let’s call it MyTypeEraser. MyTypeEraser will adopt MyGenericProtocol and will be used as a substitute for MyGenericProtocol when specifying types: wherever we would have liked to use MyGenericProtocol to specify a type, we will instead use MyTypeEraser. MyTypeEraser will give us all of the benefits of MyGenericProtocol without the limitation. Let’s see how this works.</p>
 
-<p>In the case of our Army example, the generic protocol that we are dealing with is Soldier. We will name our type eraser AnySoldier. [Note that the prefix <code>Any</code> followed by the name of the generic protocol is a naming convention that Apple follows in the swift standard library when type erasing is employed: <a href="https://developer.apple.com/reference/swift/anysequence">AnySequence</a>, <a href="https://developer.apple.com/reference/swift/anycollection">AnyCollection</a>, etc.] An AnySoldier will be initialized using an instance of some other Soldier adopting type (Sniper, Infantryman, etc.). The AnySoldier will <em>capture</em> the actual soldier’s implementation of the Soldier protocol (you’ll soon see what we mean by capture). The AnySoldier and will then be used as a standin for the actual soldier: wherever we need a Soldier adopter such as a Infantryman or a Grenadier, we will instead use the corresponding AnySoldier. Whenever the application accesses an AnySoldier via the Soldier protocol, the AnySoldier will forward that access to the original soldier instance. The concrete AnySoldier type will effectively behave like a Soldier protocol because nothing other than the protocol’s interface will be exposed. AnySoldier can be used without the compiler having any knowledge of the original instance’s type; that original type <strong>will have been erased</strong>. This will all become more clear as we proceed.</p>
+<p>In the case of our Army example, the generic protocol that we are dealing with is Soldier. We will name our type eraser AnySoldier. [Note that the prefix <code>Any</code> followed by the name of the generic protocol is a naming convention that Apple follows in the swift standard library when type erasing is employed: <a href="https://developer.apple.com/reference/swift/anysequence">AnySequence</a>, <a href="https://developer.apple.com/reference/swift/anycollection">AnyCollection</a>, etc.] An AnySoldier will be initialized using an instance of some other Soldier adopting type (Sniper, Infantryman, etc.). The AnySoldier will <em>capture</em> the actual soldier’s implementation of the Soldier protocol (you’ll soon see what we mean by capture). The AnySoldier will then be used as a standin for the actual soldier: wherever we need a Soldier adopter such as an Infantryman or a Grenadier, we will instead create and use an AnySoldier. Whenever the application accesses an AnySoldier via the Soldier protocol, the AnySoldier will forward that access to the original soldier instance. The concrete AnySoldier type will effectively behave like a Soldier protocol because nothing other than the protocol’s interface will be exposed. AnySoldier can be used without the compiler having any knowledge of the original instance’s type; that original type <strong>will have been erased</strong>. This will all become more clear as we proceed.</p>
 
 <h2 id="anysoldier-first-pass">AnySoldier: First Pass</h2>
 
