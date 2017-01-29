@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Swift | Adventures In iLand]]></title>
   <link href="http://verticon.github.io/blog/categories/swift/atom.xml" rel="self"/>
   <link href="http://verticon.github.io/"/>
-  <updated>2017-01-29T06:12:44-05:00</updated>
+  <updated>2017-01-29T06:36:53-05:00</updated>
   <id>http://verticon.github.io/</id>
   <author>
     <name><![CDATA[Verticon]]></name>
@@ -132,7 +132,7 @@ class Army {
 }
 </code></pre></noscript></div>
 <br />
-<img src="/images/blog/2017/01/24/what-the-heck-is-type-erasure-and-why-should-we-care/ProblematicArmy.png"></p>
+<a href="/images/blog/2017/01/24/what-the-heck-is-type-erasure-and-why-should-we-care/ProblematicArmy.png"><img class="center" src="/images/blog/2017/01/24/what-the-heck-is-type-erasure-and-why-should-we-care/ProblematicArmy.png"></a></p>
 
 <h2 id="type-erasure-to-the-rescue">Type Erasure To The Rescue</h2>
 
@@ -173,7 +173,7 @@ army.join(soldier: AnySoldier(soldier: Infantryman()))
 army.join(soldier: AnySoldier(soldier: Grenadier()))
 </code></pre></noscript></div>
 <br />
-<img src="/images/blog/2017/01/24/what-the-heck-is-type-erasure-and-why-should-we-care/AnySoldierFirstPass.png"></p>
+<a href="/images/blog/2017/01/24/what-the-heck-is-type-erasure-and-why-should-we-care/AnySoldierFirstPass.png"><img class="center" src="/images/blog/2017/01/24/what-the-heck-is-type-erasure-and-why-should-we-care/AnySoldierFirstPass.png"></a></p>
 
 <p>Well, that’s not what we want. We weren’t able to add a Grenadier to the army. We can create an army of any type of soldier as long as they all use the same type of Weapon (in this case Rifle). We’ve moved our issue from the Soldier to the Weapon. What can we do?</p>
 
@@ -219,13 +219,13 @@ army.join(soldier: AnySoldier(soldier: Artillaryman()))
 army.makeWar()
 </code></pre></noscript></div>
 <br />
-<img src="/images/blog/2017/01/24/what-the-heck-is-type-erasure-and-why-should-we-care/AnySoldierSecondPass.png"></p>
+<a href="/images/blog/2017/01/24/what-the-heck-is-type-erasure-and-why-should-we-care/AnySoldierSecondPass.png"><img class="center" src="/images/blog/2017/01/24/what-the-heck-is-type-erasure-and-why-should-we-care/AnySoldierSecondPass.png"></a></p>
 
 <p>There we go; the compiler is happy. We can create an army and populate it with any and all types of Soldiers. Great! But wait a minute: the weapons aren’t firing (i.e. the print statements are not coming to the terminal). What is going on?</p>
 
 <h2 id="anysoldier-final-solution">AnySoldier: Final Solution</h2>
 
-<p>Well, remember that we said: “AnySoldier will <em>capture</em> the actual soldier’s implementation of the Soldier protocol”. We havn’t yet implemented the captures. Time for the magic sauce.</p>
+<p>Well, remember that we said: “AnySoldier will <em>capture</em> the actual soldier’s implementation of the Soldier protocol”. We haven’t yet implemented the captures. Time for the magic sauce.</p>
 
 <p><div><script src='https://gist.github.com/0912a5667b684b0b6894ab021f59e6d5.js?file=AnySoldierFinalSolution.swift'></script>
 <noscript><pre><code>struct AnyWeapon : Weapon {
@@ -274,7 +274,7 @@ army.join(soldier: AnySoldier(soldier: Artillaryman()))
 army.makeWar()
 </code></pre></noscript></div>
 <br />
-<img src="/images/blog/2017/01/24/what-the-heck-is-type-erasure-and-why-should-we-care/AnySoldierFinalSolution.png"></p>
+<a href="/images/blog/2017/01/24/what-the-heck-is-type-erasure-and-why-should-we-care/AnySoldierFinalSolution.png"><img class="center" src="/images/blog/2017/01/24/what-the-heck-is-type-erasure-and-why-should-we-care/AnySoldierFinalSolution.png"></a></p>
 
 <p>Voila! All weapons are firing. Let there be war.</p>
 
