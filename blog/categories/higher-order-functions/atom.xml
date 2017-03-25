@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Higher Order Functions | Adventures In iLand]]></title>
   <link href="http://verticon.github.io/blog/categories/higher-order-functions/atom.xml" rel="self"/>
   <link href="http://verticon.github.io/"/>
-  <updated>2017-03-25T11:25:33-04:00</updated>
+  <updated>2017-03-25T12:03:15-04:00</updated>
   <id>http://verticon.github.io/</id>
   <author>
     <name><![CDATA[Verticon]]></name>
@@ -120,19 +120,19 @@ print("Result is \(type(of: result3)) = \(result3)\n")
 
 <p>Let’s start by looking at Overload 1. I’m going to change the name of the type parameter from SegmentOfResult to T so that we can more readily compare it to map’s declaration:</p>
 
-<p><code>func flatMap&lt;T&gt;(_ transform: (Self.Iterator.Element) throws -&gt; T) rethrows -&gt; [T.Iterator.Element] where T : Sequence</code></p>
-
 <p><code>func map&lt;T&gt;(_ transform: (Self.Iterator.Element) throws -&gt; T) rethrows -&gt; [T]</code></p>
+
+<p><code>func flatMap&lt;T&gt;(_ transform: (Self.Iterator.Element) throws -&gt; T) rethrows -&gt; [T.Iterator.Element] where T : Sequence</code></p>
 
 <p>The two declarations are similar. What Overload 1 does is to distinguish the case wherein the value returned by the transform function is itself a <code>Sequence</code>. In this case, what is appended to the result array are each of the individual elements of that sequence rather than the sequence itself - the sequence will be <strong>flattened</strong></p>
 
 <p>Now for Overload 2:</p>
 
-<p><code>func flatMap&lt;T&gt;(_ transform: (Self.Iterator.Element) throws -&gt; T?) rethrows -&gt; [T]</code></p>
-
 <p><code>func map&lt;T&gt;(_ transform: (Self.Iterator.Element) throws -&gt; T) rethrows -&gt; [T]</code></p>
 
-<p>The two declarations are very similar. What Overload 2 does is to distinguish the case wherein the value returned by the transform function is an <code>Optional</code>. In this case, what is appended to the result array is the value that is wrapped by that optional - the optional will be <strong>flattened</strong>. What is not apparent from Overload 2’s declaration (you just have to know) is that if the optional does not wrap a value (== .none) then flatMap will discard it instead appending it to the result array.</p>
+<p><code>func flatMap&lt;T&gt;(_ transform: (Self.Iterator.Element) throws -&gt; T?) rethrows -&gt; [T]</code></p>
+
+<p>The two declarations are very similar. What Overload 2 does is to distinguish the case wherein the value returned by the transform function is an <code>Optional</code>. In this case, what is appended to the result array is the value that is wrapped by that optional - the optional will be <strong>flattened</strong>. The result array contains Ts, not T?s - if the transform function returns a nil then flatMap will discard it.</p>
 
 <p>Okay, that all sounds good. But what if the value returned by the transform function is neither a <code>Sequence</code> nor an <code>Optional</code>? The answer is revealed by the following code:</p>
 
