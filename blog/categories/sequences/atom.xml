@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Sequences | Adventures In iLand]]></title>
   <link href="http://verticon.github.io/blog/categories/sequences/atom.xml" rel="self"/>
   <link href="http://verticon.github.io/"/>
-  <updated>2017-03-25T17:26:42-04:00</updated>
+  <updated>2017-03-25T17:30:22-04:00</updated>
   <id>http://verticon.github.io/</id>
   <author>
     <name><![CDATA[Verticon]]></name>
@@ -153,7 +153,7 @@ f1(f2)
 
 <p>Summarizing, if the transform function returns a <code>Sequence</code> then Overload 1 is used, else Overload 2 is used.</p>
 
-<p>Now that we know what flatMap flattens and what flatten means its time for some examples. Let’s get on with it! In each of these examples the transform function will simply print its argument (so that we can see what it is) and then return it (so that we can see how flatMap flattens it).</p>
+<p>Now that we know what flatMap flattens and what it means to flatten, its time for some examples. Let’s get on with it! In each of these examples the transform function will simply print its argument (so that we can see what it is) and then return it (so that we can see how flatMap flattens it).</p>
 
 <h5 id="flatmap-example-1">FlatMap Example 1</h5>
 
