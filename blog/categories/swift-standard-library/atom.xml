@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Swift Standard Library | Adventures In iLand]]></title>
   <link href="http://verticon.github.io/blog/categories/swift-standard-library/atom.xml" rel="self"/>
   <link href="http://verticon.github.io/"/>
-  <updated>2017-03-25T17:13:38-04:00</updated>
+  <updated>2017-03-25T17:26:42-04:00</updated>
   <id>http://verticon.github.io/</id>
   <author>
     <name><![CDATA[Verticon]]></name>
@@ -106,7 +106,7 @@ print("Result is \(type(of: result3)) = \(result3)\n")
   <li>(same)</li>
 </ol>
 
-<p>So, we can now answer the question “What does flatMap flatten?” - it flattens the value returned by the transform function. We’ll soon see what flatten means. [The efficacy  of the prefix “flat” (and my use of flatten) in conveying what flatMap does is, I think, subjective. As we shall see, it is reasonable]</p>
+<p>So, we can now answer the question “What does flatMap flatten?” - it flattens the value returned by the transform function. We’ll soon see what flatten means. [The efficacy  of the prefix “flat” (and my use of flatten) in conveying what flatMap does is, I think, subjective. As we shall see, it is a reasonable choice]</p>
 
 <p>Unlike map, flatMap is overloaded. Here are the declarations:</p>
 
@@ -136,7 +136,7 @@ print("Result is \(type(of: result3)) = \(result3)\n")
 
 <p>Okay, that all sounds good. But what if the value returned by the transform function is neither a <code>Sequence</code> nor an <code>Optional</code>? The answer is revealed by the following code:</p>
 
-<pre><code>func f1(_ f: @escaping () -&gt; Int?) {
+<pre><code>func f1(_ function: @escaping () -&gt; Int?) {
     print("\(type(of: f)) returns \(f())")
 }
 
@@ -147,9 +147,11 @@ f1(f2)
 // (()) -&gt; Optional&lt;Int&gt; returns Optional(1)
 </code></pre>
 
-<p>As we can see, the compiler allows us to pass () -&gt; Int as the value of f1’s () -&gt; Int? parameter. Or, more generally, () -&gt; T as the value for () -&gt; T?. So, if the transform function returns a T, instead of a T?, the compiler is still able to match it to the signature of Overload 2. Not only that - the compiler (magically?) arranges for () -&gt; T’s return value to be wrapped by an optional, which Overload 2 will then flatten (unwrap).</p>
+<p>As we can see, the compiler allows us to pass f2, () -&gt; Int, as the value of f1’s function parameter, () -&gt; Int?. Or, more generally, () -&gt; T as the value for () -&gt; T?. Not only that - as we can see from the print out, the compiler (magically?) arranges for f2’s return value to be wrapped by an optional.</p>
 
-<p>So, if the transform function returns a <code>Sequence</code> then Overload 1 is used, else Overload 2 is used.</p>
+<p>So, if the transform function returns a T, instead of a T?, the compiler is still able to match it to the signature of Overload 2.</p>
+
+<p>Summarizing, if the transform function returns a <code>Sequence</code> then Overload 1 is used, else Overload 2 is used.</p>
 
 <p>Now that we know what flatMap flattens and what flatten means its time for some examples. Let’s get on with it! In each of these examples the transform function will simply print its argument (so that we can see what it is) and then return it (so that we can see how flatMap flattens it).</p>
 
@@ -212,7 +214,7 @@ print("Result is \(type(of: result4)) = \(result4)\n")
 
 <h5 id="flatmap-example-5">FlatMap Example 5</h5>
 
-<p>For a final example, let’s see flatMap’s nil flattening/filtering in action.</p>
+<p>For a final example, let’s see flatMap’s nil filtering in action.</p>
 
 <pre><code>let result5 = [1, 2, nil, 4].flatMap() { (arg: Int?) -&gt; Int? in print("Arg = \(arg)"); return arg }
 print("Result is \(type(of: result5)) = \(result5)\n")
