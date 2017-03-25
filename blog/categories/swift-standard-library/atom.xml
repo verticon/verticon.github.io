@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Swift Standard Library | Adventures In iLand]]></title>
   <link href="http://verticon.github.io/blog/categories/swift-standard-library/atom.xml" rel="self"/>
   <link href="http://verticon.github.io/"/>
-  <updated>2017-03-25T12:03:15-04:00</updated>
+  <updated>2017-03-25T12:14:55-04:00</updated>
   <id>http://verticon.github.io/</id>
   <author>
     <name><![CDATA[Verticon]]></name>
@@ -147,7 +147,7 @@ f1(f2)
 
 <p>As we can see, the compiler allows us to pass () -&gt; Int as the value of f2’s () -&gt; Int? parameter. Or, more generally, () -&gt; T as the value for () -&gt; T?. Not only that - the compiler (magically?) arranges for () -&gt; T’s return value to be wrapped by an optional, which Overload 2 will then flatten (unwrap).</p>
 
-<p>So, if the transform function returns a <code>Sequences</code> then Overload 1 is used, else Overload 2 is used.</p>
+<p>So, if the transform function returns a <code>Sequence</code> then Overload 1 is used, else Overload 2 is used.</p>
 
 <p>Now that we know what flatMap flattens and what flatten means its time for some examples. Let’s get on with it! In each of these examples the transform function will simply print its argument (so that we can see what it is) and then return it (so that we can see how flatMap flattens it).</p>
 
