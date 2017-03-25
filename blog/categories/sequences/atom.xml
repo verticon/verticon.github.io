@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Sequences | Adventures In iLand]]></title>
   <link href="http://verticon.github.io/blog/categories/sequences/atom.xml" rel="self"/>
   <link href="http://verticon.github.io/"/>
-  <updated>2017-03-25T12:14:55-04:00</updated>
+  <updated>2017-03-25T17:10:57-04:00</updated>
   <id>http://verticon.github.io/</id>
   <author>
     <name><![CDATA[Verticon]]></name>
@@ -145,7 +145,7 @@ f1(f2)
 // (()) -&gt; Optional&lt;Int&gt; returns Optional(1)
 </code></pre>
 
-<p>As we can see, the compiler allows us to pass () -&gt; Int as the value of f2’s () -&gt; Int? parameter. Or, more generally, () -&gt; T as the value for () -&gt; T?. Not only that - the compiler (magically?) arranges for () -&gt; T’s return value to be wrapped by an optional, which Overload 2 will then flatten (unwrap).</p>
+<p>As we can see, the compiler allows us to pass () -&gt; Int as the value of f2’s () -&gt; Int? parameter. Or, more generally, () -&gt; T as the value for () -&gt; T?. So, if the transform function returns a T, instead of a T?, the compiler is still able to match it to the signature of Overload 2. Not only that - the compiler (magically?) arranges for () -&gt; T’s return value to be wrapped by an optional, which Overload 2 will then flatten (unwrap).</p>
 
 <p>So, if the transform function returns a <code>Sequence</code> then Overload 1 is used, else Overload 2 is used.</p>
 
