@@ -4,7 +4,7 @@
   <title><![CDATA[Adventures In iLand]]></title>
   <link href="http://verticon.github.io/atom.xml" rel="self"/>
   <link href="http://verticon.github.io/"/>
-  <updated>2017-01-29T06:36:53-05:00</updated>
+  <updated>2017-03-25T11:25:33-04:00</updated>
   <id>http://verticon.github.io/</id>
   <author>
     <name><![CDATA[Verticon]]></name>
@@ -14,10 +14,237 @@
 
   
   <entry>
+    <title type="html"><![CDATA[What Does FlatMap Flatten and What Does Flatten Mean?]]></title>
+    <link href="http://verticon.github.io/blog/2017/03/02/what-does-flatmap-flatten/"/>
+    <updated>2017-03-02T19:37:48-05:00</updated>
+    <id>http://verticon.github.io/blog/2017/03/02/what-does-flatmap-flatten</id>
+    <content type="html"><![CDATA[<p>FlatMap, and its close cousin map, are two of the higher order functions (i.e. functions that accept and/or return other functions) that are declared by the Sequence protocol. Today I’m going to share what I have learned about flatMap. I’ll address the questions: What does flatMap flatten? What does flatten mean?</p>
+
+<!-- more -->
+
+<h2 id="lets-begin-with-a-look-at-map">Let’s Begin With a Look at Map</h2>
+
+<p>If you are like me then you will find that map is a bit easier to understand than flatMap. Let’s start by having a look at map. Here is its declaration:</p>
+
+<p><code>func map&lt;T&gt;(_ transform: (Self.Iterator.Element) throws -&gt; T) rethrows -&gt; [T]</code></p>
+
+<p>Let’s break this signature down:</p>
+<ul>
+  <li>Map is a generic method with one type parameter T</li>
+  <li>The map method declares one parameter; a function with single parameter whose type is the type of the elements of the Sequence upon which map is being invoked and whose return type is T.</li>
+  <li>Map returns a value of type <code>Array&lt;T&gt;</code></li>
+</ul>
+
+<p>How does the compiler resolve the type parameter? T is resolved to whatever type is returned by the transform function. The examples below will demonstrate this. Here are the steps that map performs:</p>
+
+<ol>
+  <li>Iterate through the sequence’s elements.</li>
+  <li>Pass each element in turn to the transform function.</li>
+  <li>Append the return value of the transform function to an array.</li>
+  <li>Return the array.</li>
+</ol>
+
+<p>An example is worth a thousand words, right? Let’s have a few.</p>
+
+<h5 id="map-example-1">Map Example 1</h5>
+
+<pre><code>let sequence1 = [1, 2, 3, 4]
+func transform1(arg: Int) -&gt; Int { print("Arg = \(arg)"); return 2 * arg }
+let result1 = sequence1.map(transform1)
+print("Result is \(type(of: result1)) = \(result1)\n")
+// Prints:
+//    Arg = 1
+//    Arg = 2
+//    Arg = 3
+//    Arg = 4
+//    Result is Array&lt;Int&gt; = [2, 4, 6, 8]
+</code></pre>
+
+<p>Each <code>Int</code> in sequence1 is passed to transform1; hence transform1 must be declared to take an <code>Int</code>. transform1 returns it argument multiplied by two. The type of the result is an array of the type returned by transform 1, <code>Array&lt;Int&gt;</code>.</p>
+
+<h5 id="map-example-2">Map Example 2</h5>
+
+<p>Let’s see what happens if the transform function instead returns a String.</p>
+
+<pre><code>func transform2(arg: Int) -&gt; String { print("Arg = \(arg)"); return String(arg) }
+let result2 = sequence1.map(transform2)
+print("Result is \(type(of: result2)) = \(result2)\n")
+// Prints:
+//    Arg = 1
+//    Arg = 2
+//    Arg = 3
+//    Arg = 4
+//    Result is Array&lt;String&gt; = ["1", "2", "3", "4"]
+</code></pre>
+
+<p>Now the type of the result is <code>Array&lt;String&gt;</code>. Easy, yes? Let’s do one more.</p>
+
+<h5 id="map-example-3">Map Example 3</h5>
+
+<pre><code>let sequence3 = [[1, 2], [3, 4]]
+func transform3(arg: [Int]) -&gt; Double { print("Arg = \(arg)"); return Double(arg.reduce(0){ return $0 + $1 }) }
+let result3 = sequence3.map(transform3)
+print("Result is \(type(of: result3)) = \(result3)\n")
+// Prints:
+//    Arg = [1, 2]
+//    Arg = [3, 4]
+//    Result is Array&lt;Double&gt; = [3.0, 7.0]
+</code></pre>
+
+<p>Here the elements of the sequence are <code>Array&lt;Int&gt;</code> so that is what the transform function receives. Transform3 returns the sum of the array elements as a double (I know; I used reduce without explaining it but WTH). The type of the result is thus <code>Array&lt;Double&gt;</code></p>
+
+<p>Okay, enough of map. Lets bring on the real protagonist of our story, flatMap.</p>
+
+<h2 id="on-to-flatmap">On to FlatMap</h2>
+
+<p>How does flatMap differ from map? During our visit with map I listed the four steps that map performs. FlatMap does something different on step 3:</p>
+
+<ol>
+  <li>(same)</li>
+  <li>(same)</li>
+  <li>FlatMap performs some additional processing (flattening) of the value returned by the transform function and appends the result of that processing to an array.</li>
+  <li>(same)</li>
+</ol>
+
+<p>So, we can now answer the question “What does flatMap flatten?” - it flattens the value returned by the transform function. We’ll soon see what flatten means. [The efficacy  of the prefix “flat” (and my use of flatten) in conveying what flatMap does is, I think, subjective. As we shall see, it is reasonable]</p>
+
+<p>Unlike map, flatMap is overloaded. Here are the declarations:</p>
+
+<p><strong>Overload 1</strong></p>
+
+<p><code>func flatMap&lt;SegmentOfResult&gt;(_ transform: (Self.Iterator.Element) throws -&gt; SegmentOfResult) rethrows -&gt; [SegmentOfResult.Iterator.Element] where SegmentOfResult : Sequence</code></p>
+
+<p><strong>Overload 2</strong></p>
+
+<p><code>func flatMap&lt;ElementOfResult&gt;(_ transform: (Self.Iterator.Element) throws -&gt; ElementOfResult?) rethrows -&gt; [ElementOfResult]</code></p>
+
+<p>Let’s start by looking at Overload 1. I’m going to change the name of the type parameter from SegmentOfResult to T so that we can more readily compare it to map’s declaration:</p>
+
+<p><code>func flatMap&lt;T&gt;(_ transform: (Self.Iterator.Element) throws -&gt; T) rethrows -&gt; [T.Iterator.Element] where T : Sequence</code></p>
+
+<p><code>func map&lt;T&gt;(_ transform: (Self.Iterator.Element) throws -&gt; T) rethrows -&gt; [T]</code></p>
+
+<p>The two declarations are similar. What Overload 1 does is to distinguish the case wherein the value returned by the transform function is itself a <code>Sequence</code>. In this case, what is appended to the result array are each of the individual elements of that sequence rather than the sequence itself - the sequence will be <strong>flattened</strong></p>
+
+<p>Now for Overload 2:</p>
+
+<p><code>func flatMap&lt;T&gt;(_ transform: (Self.Iterator.Element) throws -&gt; T?) rethrows -&gt; [T]</code></p>
+
+<p><code>func map&lt;T&gt;(_ transform: (Self.Iterator.Element) throws -&gt; T) rethrows -&gt; [T]</code></p>
+
+<p>The two declarations are very similar. What Overload 2 does is to distinguish the case wherein the value returned by the transform function is an <code>Optional</code>. In this case, what is appended to the result array is the value that is wrapped by that optional - the optional will be <strong>flattened</strong>. What is not apparent from Overload 2’s declaration (you just have to know) is that if the optional does not wrap a value (== .none) then flatMap will discard it instead appending it to the result array.</p>
+
+<p>Okay, that all sounds good. But what if the value returned by the transform function is neither a <code>Sequence</code> nor an <code>Optional</code>? The answer is revealed by the following code:</p>
+
+<pre><code>func f1(_ f: @escaping () -&gt; Int?) {
+    print("\(type(of: f)) returns \(f())")
+}
+func f2() -&gt; Int { return 1 }
+f1(f2)
+// Prints:
+// (()) -&gt; Optional&lt;Int&gt; returns Optional(1)
+</code></pre>
+
+<p>As we can see, the compiler allows us to pass () -&gt; Int as the value of f2’s () -&gt; Int? parameter. Or, more generally, () -&gt; T as the value for () -&gt; T?. Not only that - the compiler (magically?) arranges for () -&gt; T’s return value to be wrapped by an optional, which Overload 2 will then flatten (unwrap).</p>
+
+<p>So, if the transform function returns a <code>Sequences</code> then Overload 1 is used, else Overload 2 is used.</p>
+
+<p>Now that we know what flatMap flattens and what flatten means its time for some examples. Let’s get on with it! In each of these examples the transform function will simply print its argument (so that we can see what it is) and then return it (so that we can see how flatMap flattens it).</p>
+
+<h5 id="flatmap-example-1">FlatMap Example 1</h5>
+
+<pre><code>let sequence1 = [[1, 2], [3, 4], [5, 6]]
+let transform1 = { (arg: [Int]) -&gt; [Int] in print("Arg = \(arg)"); return arg }
+let result1 = sequence1.flatMap(transform1)
+print("Result is \(type(of: result1)) = \(result1)\n")
+// Prints:
+//    Arg = [1, 2]
+//    Arg = [3, 4]
+//    Arg = [5, 6]
+//    Result is Array&lt;Int&gt; = [1, 2, 3, 4, 5, 6]
+</code></pre>
+
+<p>Overload 1 is used to flat map <code>Array&lt;Array&lt;Int&gt;&gt;</code> to <code>Array&lt;Int&gt;</code>.</p>
+
+<h5 id="flatmap-example-2">FlatMap Example 2</h5>
+
+<p>Let’s be a bit more terse.</p>
+
+<pre><code>let result2 = [1, 2, 3].flatMap() { (arg: Int) -&gt; Int in print("Arg = \(arg)"); return arg }
+print("Result is \(type(of: result2)) = \(result2)\n")
+// Prints:
+//    Arg = 1
+//    Arg = 2
+//    Arg = 3
+//    Result is Array&lt;Int&gt; = [1, 2, 3]
+</code></pre>
+
+<p>Overload 2 is used to flat map <code>Array&lt;Int&gt;</code> to <code>Array&lt;Int&gt;</code>.</p>
+
+<h5 id="flatmap-example-3">FlatMap Example 3</h5>
+
+<pre><code>let result3 = [[[1, 2], [3,4]], [[5, 6], [7, 8]]].flatMap() { (arg: [[Int]]) -&gt; [[Int]] in print("Arg = \(arg)"); return arg }
+print("Result is \(type(of: result3)) = \(result3)\n")
+// Prints:
+//    Arg = [[1, 2], [3, 4]]
+//    Arg = [[5, 6], [7, 8]]
+//    Result is Array&lt;Array&lt;Int&gt;&gt; = [[1, 2], [3, 4], [5, 6], [7, 8]]
+</code></pre>
+
+<p>Overload 1 is used to flat map <code>Array&lt;Array&lt;Array&lt;Int&gt;&gt;&gt;</code> to <code>Array&lt;Array&lt;Int&gt;&gt;</code>.</p>
+
+<h5 id="flatmap-example-4">FlatMap Example 4</h5>
+
+<p>How about a sequence other than <code>Array&lt;T&gt;</code>, such as <code>CountableClosedRange&lt;Int&gt;</code>?</p>
+
+<pre><code>let result4 = (1 ... 3).flatMap() { (arg: Int) -&gt; Int in print("Arg = \(arg)"); return arg }
+print("Result is \(type(of: result4)) = \(result4)\n")
+// Prints:
+//    Arg = 1
+//    Arg = 2
+//    Arg = 3
+//    Result is Array&lt;Int&gt; = [1, 2, 3]
+</code></pre>
+
+<p>Overload 2 is used to flat map <code>CountableClosedRange&lt;Int&gt;</code> to <code>Array&lt;Int&gt;</code>.</p>
+
+<h5 id="flatmap-example-5">FlatMap Example 5</h5>
+
+<p>For a final example, let’s see flatMap’s nil flattening/filtering in action.</p>
+
+<pre><code>let result5 = [1, 2, nil, 4].flatMap() { (arg: Int?) -&gt; Int? in print("Arg = \(arg)"); return arg }
+print("Result is \(type(of: result5)) = \(result5)\n")
+// Prints:
+//    Arg = Optional(1)
+//    Arg = Optional(2)
+//    Arg = nil
+//    Arg = Optional(4)
+Result is Array&lt;Int&gt; = [1, 2, 4]
+</code></pre>
+
+<p>Overload 2 is used to flat map <code>Array&lt;Int?&gt;</code> to <code>Array&lt;Int&gt;</code>.</p>
+
+<h2 id="conclusion">Conclusion</h2>
+
+<p>Let’s conclude by restating the answers to our original questions:</p>
+
+<ol>
+  <li>What does flatMap flatten?  <br />
+ It flattens the return value of the transform function.</li>
+  <li>What does flatten mean?  <br />
+ a. In the case of a sequence it means to extract the elements of the sequence.  <br />
+ b. In the case of an optional it means to unwrap the optional or to discard it if nil. As was demonstrated, this also works for non optionals.</li>
+</ol>
+
+<p>Well, there you have it; flatMap explained. I hope that you found it to be clear and understandable. It’d be great to receive your feedback.</p>
+]]></content>
+  </entry>
+  
+  <entry>
     <title type="html"><![CDATA[What the Heck Is Type Erasure and Why Should We Care?]]></title>
-    <link href="http://verticon.github.io/blog/2017/01/24/what-the-heck-is-type-erasure-and-why-should-we-care/"/>
+    <link href="http://verticon.github.io/blog/2017/01/24/what-the-heck-is-type-erasure/"/>
     <updated>2017-01-24T17:14:59-05:00</updated>
-    <id>http://verticon.github.io/blog/2017/01/24/what-the-heck-is-type-erasure-and-why-should-we-care</id>
+    <id>http://verticon.github.io/blog/2017/01/24/what-the-heck-is-type-erasure</id>
     <content type="html"><![CDATA[<p>We are all unique individuals whose minds process and organize information in different ways, and whose communication styles reflect that internal organization. When I first encountered the words <strong>Type Erasure</strong> I thought: <em>“Oh, some cool swifty thing. I’d better find out about it”</em>. So, I started googling and reading. But, time and again, I came up short. Even though I (mostly) understood what I had read, my understanding felt incomplete. There seemed to be something missing, as though the author had not made some essential concept clear. However, I persevered and now I get it. So for this, my first ever blog post, I’m going to take a shot at explaining type erasure. Maybe it will help someone else who thinks differently.</p>
 
 <!-- more -->
@@ -286,7 +513,6 @@ army.makeWar()
   <li><a href="http://robnapier.net/erasure">Rob Napier</a></li>
   <li><a href="https://krakendev.io/blog/generic-protocols-and-their-shortcomings">Hector Matos</a></li>
 </ul>
-
 ]]></content>
   </entry>
   

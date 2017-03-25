@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Swift | Adventures In iLand]]></title>
   <link href="http://verticon.github.io/blog/categories/swift/atom.xml" rel="self"/>
   <link href="http://verticon.github.io/"/>
-  <updated>2017-01-29T06:36:53-05:00</updated>
+  <updated>2017-03-25T11:25:33-04:00</updated>
   <id>http://verticon.github.io/</id>
   <author>
     <name><![CDATA[Verticon]]></name>
@@ -15,9 +15,9 @@
   
   <entry>
     <title type="html"><![CDATA[What the Heck Is Type Erasure and Why Should We Care?]]></title>
-    <link href="http://verticon.github.io/blog/2017/01/24/what-the-heck-is-type-erasure-and-why-should-we-care/"/>
+    <link href="http://verticon.github.io/blog/2017/01/24/what-the-heck-is-type-erasure/"/>
     <updated>2017-01-24T17:14:59-05:00</updated>
-    <id>http://verticon.github.io/blog/2017/01/24/what-the-heck-is-type-erasure-and-why-should-we-care</id>
+    <id>http://verticon.github.io/blog/2017/01/24/what-the-heck-is-type-erasure</id>
     <content type="html"><![CDATA[<p>We are all unique individuals whose minds process and organize information in different ways, and whose communication styles reflect that internal organization. When I first encountered the words <strong>Type Erasure</strong> I thought: <em>“Oh, some cool swifty thing. I’d better find out about it”</em>. So, I started googling and reading. But, time and again, I came up short. Even though I (mostly) understood what I had read, my understanding felt incomplete. There seemed to be something missing, as though the author had not made some essential concept clear. However, I persevered and now I get it. So for this, my first ever blog post, I’m going to take a shot at explaining type erasure. Maybe it will help someone else who thinks differently.</p>
 
 <!-- more -->
@@ -287,7 +287,6 @@ army.makeWar()
   <li><a href="http://robnapier.net/erasure">Rob Napier</a></li>
   <li><a href="https://krakendev.io/blog/generic-protocols-and-their-shortcomings">Hector Matos</a></li>
 </ul>
-
 ]]></content>
   </entry>
   

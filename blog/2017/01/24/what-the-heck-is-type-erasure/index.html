@@ -9,8 +9,8 @@
   <meta name="author" content="Verticon">
 
   
-  <meta name="description" content="How to use type erasure to overcome the limitations of swift's generic protocols">
-  <meta name="keywords" content="ios,swift,protocols,generics">
+  <meta name="description" content="A look into how can type erasure can be used to overcome the limitations of swift's generic protocols.">
+  <meta name="keywords" content="type erasure,generic protocols">
 
   <!-- http://t.co/dKP3o1e -->
   <meta name="HandheldFriendly" content="True">
@@ -18,7 +18,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://verticon.github.io/blog/2017/01/24/what-the-heck-is-type-erasure-and-why-should-we-care/">
+  <link rel="canonical" href="http://verticon.github.io/blog/2017/01/24/what-the-heck-is-type-erasure/">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <link href="/atom.xml" rel="alternate" title="Adventures In iLand" type="application/atom+xml">
@@ -349,7 +349,6 @@ army.makeWar()
   <li><a href="http://robnapier.net/erasure">Rob Napier</a></li>
   <li><a href="https://krakendev.io/blog/generic-protocols-and-their-shortcomings">Hector Matos</a></li>
 </ul>
-
 </div>
 
 
@@ -370,7 +369,7 @@ army.makeWar()
 
 <span class="categories">
   
-    <a class='category' href='/blog/categories/generics/'>generics</a>, <a class='category' href='/blog/categories/ios/'>ios</a>, <a class='category' href='/blog/categories/protocols/'>protocols</a>, <a class='category' href='/blog/categories/swift/'>swift</a>
+    <a class='category' href='/blog/categories/generics/'>generics</a>, <a class='category' href='/blog/categories/protocols/'>protocols</a>, <a class='category' href='/blog/categories/swift/'>swift</a>
   
 </span>
 
@@ -379,7 +378,7 @@ army.makeWar()
     
       <div class="sharing">
   
-  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://verticon.github.io/blog/2017/01/24/what-the-heck-is-type-erasure-and-why-should-we-care/" data-via="" data-counturl="http://verticon.github.io/blog/2017/01/24/what-the-heck-is-type-erasure-and-why-should-we-care/" >Tweet</a>
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://verticon.github.io/blog/2017/01/24/what-the-heck-is-type-erasure/" data-via="" data-counturl="http://verticon.github.io/blog/2017/01/24/what-the-heck-is-type-erasure/" >Tweet</a>
   
   
   
@@ -388,6 +387,8 @@ army.makeWar()
     
     <p class="meta">
       
+      
+        <a class="basic-alignment right" href="/blog/2017/03/02/what-does-flatmap-flatten/" title="Next Post: What Does FlatMap Flatten and What Does Flatten Mean?">What Does FlatMap Flatten and What Does Flatten Mean? &raquo;</a>
       
     </p>
   </footer>
@@ -408,7 +409,11 @@ army.makeWar()
   <ul id="recent_posts">
     
       <li class="post">
-        <a href="/blog/2017/01/24/what-the-heck-is-type-erasure-and-why-should-we-care/">What the Heck Is Type Erasure and Why Should We Care?</a>
+        <a href="/blog/2017/03/02/what-does-flatmap-flatten/">What Does FlatMap Flatten and What Does Flatten Mean?</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2017/01/24/what-the-heck-is-type-erasure/">What the Heck Is Type Erasure and Why Should We Care?</a>
       </li>
     
   </ul>
@@ -437,8 +442,8 @@ army.makeWar()
       
         
         // var disqus_developer = 1;
-        var disqus_identifier = 'http://verticon.github.io/blog/2017/01/24/what-the-heck-is-type-erasure-and-why-should-we-care/';
-        var disqus_url = 'http://verticon.github.io/blog/2017/01/24/what-the-heck-is-type-erasure-and-why-should-we-care/';
+        var disqus_identifier = 'http://verticon.github.io/blog/2017/01/24/what-the-heck-is-type-erasure/';
+        var disqus_url = 'http://verticon.github.io/blog/2017/01/24/what-the-heck-is-type-erasure/';
         var disqus_script = 'embed.js';
       
     (function () {
