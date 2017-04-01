@@ -4,7 +4,7 @@
   <title><![CDATA[Adventures In iLand]]></title>
   <link href="http://verticon.github.io/atom.xml" rel="self"/>
   <link href="http://verticon.github.io/"/>
-  <updated>2017-04-01T06:38:04-04:00</updated>
+  <updated>2017-04-01T06:44:13-04:00</updated>
   <id>http://verticon.github.io/</id>
   <author>
     <name><![CDATA[Verticon]]></name>
@@ -12,15 +12,6 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
-  
-  <entry>
-    <title type="html"><![CDATA[Persisting Structs to User Defaults]]></title>
-    <link href="http://verticon.github.io/blog/2017/03/31/persisting-structs-to-user-defaults/"/>
-    <updated>2017-03-31T17:20:44-04:00</updated>
-    <id>http://verticon.github.io/blog/2017/03/31/persisting-structs-to-user-defaults</id>
-    <content type="html"><![CDATA[
-]]></content>
-  </entry>
   
   <entry>
     <title type="html"><![CDATA[What Does FlatMap Flatten and What Does Flatten Mean?]]></title>
