@@ -4,7 +4,7 @@
   <title><![CDATA[Adventures In iLand]]></title>
   <link href="http://verticon.github.io/atom.xml" rel="self"/>
   <link href="http://verticon.github.io/"/>
-  <updated>2017-03-25T17:30:22-04:00</updated>
+  <updated>2017-04-01T06:38:04-04:00</updated>
   <id>http://verticon.github.io/</id>
   <author>
     <name><![CDATA[Verticon]]></name>
@@ -12,6 +12,15 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Persisting Structs to User Defaults]]></title>
+    <link href="http://verticon.github.io/blog/2017/03/31/persisting-structs-to-user-defaults/"/>
+    <updated>2017-03-31T17:20:44-04:00</updated>
+    <id>http://verticon.github.io/blog/2017/03/31/persisting-structs-to-user-defaults</id>
+    <content type="html"><![CDATA[
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[What Does FlatMap Flatten and What Does Flatten Mean?]]></title>
@@ -136,20 +145,21 @@ print("Result is \(type(of: result3)) = \(result3)\n")
 
 <p>Okay, that all sounds good. But what if the value returned by the transform function is neither a <code>Sequence</code> nor an <code>Optional</code>? The answer is revealed by the following code:</p>
 
-<pre><code>func f1(_ function: @escaping () -&gt; Int?) {
+<pre><code>func f1() -&gt; Int { return 1 }
+print("\(type(of: f1)) returns \(f1())")
+// Prints:
+// () -&gt; Int returns 1
+
+func f2(_ f: @escaping () -&gt; Int?) {
     print("\(type(of: f)) returns \(f())")
 }
 
-func f2() -&gt; Int { return 1 }
-
-f1(f2)
+f2(f1)
 // Prints:
 // (()) -&gt; Optional&lt;Int&gt; returns Optional(1)
 </code></pre>
 
-<p>As we can see, the compiler allows us to pass f2, () -&gt; Int, as the value of f1’s function parameter, () -&gt; Int?. Or, more generally, () -&gt; T as the value for () -&gt; T?. Not only that - as we can see from the print out, the compiler (magically?) arranges for f2’s return value to be wrapped by an optional.</p>
-
-<p>So, if the transform function returns a T, instead of a T?, the compiler is still able to match it to the signature of Overload 2.</p>
+<p>As we can see, the compiler allows us to pass f1 as the argument for f2’s parameter. Or, more generally, a () -&gt; T as the argument for a () -&gt; T? parameter. The print outs reveal that the compiler has “magically transformed” (surely there is a non-magical explanation?) f1’s type when it is passed to f2. So, if the transform function returns a T, instead of a T?, the compiler is still able to match it to the signature of Overload 2.</p>
 
 <p>Summarizing, if the transform function returns a <code>Sequence</code> then Overload 1 is used, else Overload 2 is used.</p>
 
