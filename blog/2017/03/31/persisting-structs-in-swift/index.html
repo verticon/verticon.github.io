@@ -1,0 +1,379 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Persisting Structs in Swift - Adventures In iLand</title>
+  <meta name="author" content="Verticon">
+
+  
+  <meta name="description" content="The insights and hard won lessons of an evolving human being / iOS developer.">
+  <meta name="keywords" content="programming,development,ios,swift">
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://verticon.github.io/blog/2017/03/31/persisting-structs-in-swift/">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="Adventures In iLand" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="/javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="//fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="//fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">Adventures In iLand</a></h1>
+  
+    <h2>What doesn't kill us makes us stronger.</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation">  
+  
+<form action="https://www.google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="sitesearch" value="verticon.github.io">
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Persisting Structs in Swift</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2017-03-31T17:20:44-04:00'><span class='date'><span class='date-month'>Mar</span> <span class='date-day'>31</span><span class='date-suffix'>st</span>, <span class='date-year'>2017</span></span> <span class='time'>5:20 pm</span></time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>My journey through iLand recently brought me to the place whereat I needed to persist the data records being created by my application. My first thought was Core Data. But then <a href="http://nshipster.com/nscoding/">NSHipster</a> helped me to realize that NSCoding would be a better choice for my situation. Great! Off I go. But darn! The NSCoding protocol is restricted to class types and I am using structs (and want them for their value semantics). What to do? After some looking around, <a href="http://redqueencoder.com/property-lists-and-user-defaults-in-swift/">The Red Queen Coder</a> (TL;DR sorry Red Queen) came to my rescue. I liked the Red Queen’s approach but was not very satisfied with the implementation. I would like to present the results of my tweaking and polishing.</p>
+
+<!-- more -->
+
+<p>I will start out by showing the code that will be used to accomplish the persisting of structs. Then I will show an example that uses that code.</p>
+
+<h2 id="implementation">Implementation</h2>
+
+<h3 id="the-encodable-protocol">The Encodable Protocol</h3>
+<p>Types (such as structs) announce their encodability (which will allow them to be persisted) by adopting the Encodable protocol. The encode method is used to store the properties of an instance of the type into a dictionary. The initializer is used to reconstruct an instance of the type from that dictionary. The initializer is failable because there is no guarantee that the dictionary that is passed in was actually encoded by the type. The initializer’s parameter is optional so as to allow cleaner code at the call site. As we will see, it is these dictionaries that are persisted.</p>
+
+<pre><code>public protocol Encodable {
+    typealias Properties = Dictionary&lt;String, Any&gt;
+    func encode() -&gt; Properties
+    init?(_ properties: Properties?)
+}
+</code></pre>
+
+<h3 id="helper-extensions-on-array">Helper Extensions on Array</h3>
+<p>It will often occur that we have a array of objects to be encoded.<br />
+These extensions will make the usage at the call site a bit cleaner; allowing us to write <code>myArray.encode()</code> and <code>myArray.decode()</code>.</p>
+
+<pre><code>extension Array where Element : Encodable {
+    public func encode() -&gt; [Encodable.Properties] {
+        return map{ $0.encode() }
+    }
+}
+
+extension Array where Element == Encodable.Properties {
+    public func decode&lt;T:Encodable&gt;(type: T.Type) -&gt; [T] {
+        return flatMap{ T($0) }
+    }
+}
+</code></pre>
+
+<h3 id="persistence-with-user-defaults">Persistence With User Defaults</h3>
+<p>These top level functions will save/load arrays of Encodable objects to/from User Defaults. Note that loadFromFile’s type parameter specifies the type of the objects to be instantiated from each of the Encodable.Properties (i.e Dictionaries)</p>
+
+<pre><code>public func saveToUserDefaults&lt;T:Encodable&gt;(_ objects: [T], withKey key: String) {
+    UserDefaults.standard.set(objects.encode(), forKey: key)
+}
+
+public func loadFromUserDefaults&lt;T:Encodable&gt;(type: T.Type, withKey key: String) -&gt; [T]? {
+    return (UserDefaults.standard.array(forKey: key) as? [Encodable.Properties])?.decode(type: T.self)
+}
+</code></pre>
+
+<h3 id="persistence-with-files">Persistence With Files</h3>
+<p>These top level functions will save/load arrays of Encodable objects to/from a file in the document directory. Note that at this point we are able to use NSKeyedArchiver and NSKeyedUnarchiver because all of the items in the dictionaries are types that are known to NSKeyedArchiver and NSKeyedUnarchiver (i.e. Int, String, Double, etc).</p>
+
+<pre><code>public func saveToFile&lt;T:Encodable&gt;(_ values: [T], withName name: String) -&gt; Bool {
+    do {
+        let data = NSKeyedArchiver.archivedData(withRootObject: values.encode())
+        try data.write(to: getUrl(forName: name), options: .atomic)
+        return true
+    } catch {
+        print(error)
+    }
+    return false
+}
+
+public func loadFromFile&lt;T:Encodable&gt;(type: T.Type, withName name: String) -&gt; [T]? {
+    do {
+        let data = try Data(contentsOf: getUrl(forName: name))
+        if let encoded = NSKeyedUnarchiver.unarchiveObject(with: data) as? [Encodable.Properties] {
+            return encoded.decode(type: type)
+        }
+    } catch {
+        print(error)
+    }
+    return nil
+}
+
+private func getUrl(forName: String) -&gt; URL {
+    return try! FileManager.default.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: false).appendingPathComponent(forName)
+}
+</code></pre>
+
+<h2 id="an-example-of-an-encodable-type">An Example of an Encodable Type</h2>
+
+<h3 id="the-encodable-type">The Encodable Type</h3>
+<p>Adopting the Encodable protocol is simple: <code>encode</code> writes the properties to a dictionary, <code>init</code> restores them from a dictionary.</p>
+
+<pre><code>struct MyData {
+    let int: Int
+    let double: Double
+    let string: String
+    let bool: Bool
+    let date: Date
+    let blob: Data
+}
+
+extension MyData: Encodable {
+
+    func encode() -&gt; Properties {
+        return ["int": int, "double": double, "string": string, "bool": bool, "date": date, "blob": blob, ]
+    }
+
+    init?(_ properties: Properties?) {
+        guard let properties = properties else { return nil }
+
+        if let int = properties["int"] as? Int,
+           let double = properties["double"] as? Double,
+           let string = properties["string"] as? String,
+           let bool = properties["bool"] as? Bool,
+           let date = properties["date"] as? Date,
+           let blob = properties["blob"] as? Data {
+               self.int = int
+               self.double = double
+               self.string = string
+               self.bool = bool
+               self.date = date
+               self.blob = blob
+        } else {
+            return nil
+        }
+    }
+}
+</code></pre>
+
+<h3 id="usage">Usage</h3>
+<p>And, finally here is how instances of MyData can be persisted.</p>
+
+<pre><code>let myData = [MyData(int: 1, double: 1.0, string: "One", bool: true, date: Date(), blob: Data(bytes: [1,2,3,4,5,6,7,8])),
+              MyData(int: 2, double: 2.0, string: "Two", bool: false, date: Date(), blob: Data(bytes: [9,10,11,12]))]
+
+
+print("Original:")
+myData.forEach{ print("\t", $0) }
+// Prints:
+// Original:
+//     MyData(int: 1, double: 1.0, string: "One", bool: true, date: 2017-04-04 16:04:36 +0000, blob: 8 bytes)
+//     MyData(int: 2, double: 2.0, string: "Two", bool: false, date: 2017-04-04 16:04:36 +0000, blob: 4 bytes)
+
+
+print("\nEncode =&gt; Decode:")
+myData.encode().decode(type: MyData.self).forEach{ print("\t", $0) }
+// Prints:
+// Encode =&gt; Decode:
+//     MyData(int: 1, double: 1.0, string: "One", bool: true, date: 2017-04-04 16:04:36 +0000, blob: 8 bytes)
+//     MyData(int: 2, double: 2.0, string: "Two", bool: false, date: 2017-04-04 16:04:36 +0000, blob: 4 bytes)
+
+
+print("\nUser Defaults: Save =&gt; Load")
+let key = "MyData"
+saveToUserDefaults(myData, withKey: key)
+loadFromUserDefaults(type: MyData.self, withKey: key)?.forEach{ print("\t", $0) }
+// Prints:
+// User Defaults: Save =&gt; Load
+//     MyData(int: 1, double: 1.0, string: "One", bool: true, date: 2017-04-04 16:04:36 +0000, blob: 8 bytes)
+//     MyData(int: 2, double: 2.0, string: "Two", bool: false, date: 2017-04-04 16:04:36 +0000, blob: 4 bytes)
+
+
+print("\nFile: Save =&gt; Load")
+let fileName = "MyData.dat"
+if saveToFile(myData, withName: fileName) {
+    loadFromFile(type: MyData.self, withName: fileName)?.forEach{ print("\t", $0) }
+}
+else {
+    print("Cannot save to \(fileName)")
+}
+// Prints:
+// File: Save =&gt; Load
+//     MyData(int: 1, double: 1.0, string: "One", bool: true, date:    2017-04-04 16:04:36 +0000, blob: 8 bytes)
+//     MyData(int: 2, double: 2.0, string: "Two", bool: false, date: 2017-04-04 16:04:36 +0000, blob: 4 bytes)
+</code></pre>
+
+<h3 id="conclusion">Conclusion</h3>
+
+<p>This has worked great for me. I have the put the implementation into my toolbox framework. I have coded my application’s data structs similarly to the MyData example. And, voila! When my application restarts it is able to recover its data.</p>
+
+<p>You can download a playground that contains all of the above code <a href="https://github.com/verticon/PersistingStructsInSwift">here</a></p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Verticon</span></span>
+
+      
+
+
+
+
+<time class='entry-date' datetime='2017-03-31T17:20:44-04:00'><span class='date'><span class='date-month'>Mar</span> <span class='date-day'>31</span><span class='date-suffix'>st</span>, <span class='date-year'>2017</span></span> <span class='time'>5:20 pm</span></time>
+      
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://verticon.github.io/blog/2017/03/31/persisting-structs-in-swift/" data-via="" data-counturl="http://verticon.github.io/blog/2017/03/31/persisting-structs-in-swift/" >Tweet</a>
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2017/03/02/what-does-flatmap-flatten/" title="Previous Post: What Does FlatMap Flatten and What Does Flatten Mean?">&laquo; What Does FlatMap Flatten and What Does Flatten Mean?</a>
+      
+      
+    </p>
+  </footer>
+</article>
+
+  <section>
+    <h1>Comments</h1>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+  </section>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2017/03/31/persisting-structs-in-swift/">Persisting Structs in Swift</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2017/03/02/what-does-flatmap-flatten/">What Does FlatMap Flatten and What Does Flatten Mean?</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2017/01/24/what-the-heck-is-type-erasure/">What the Heck Is Type Erasure and Why Should We Care?</a>
+      </li>
+    
+  </ul>
+</section>
+
+
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2017 - Verticon -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+<script type="text/javascript">
+      var disqus_shortname = 'verticon';
+      
+        
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://verticon.github.io/blog/2017/03/31/persisting-structs-in-swift/';
+        var disqus_url = 'http://verticon.github.io/blog/2017/03/31/persisting-structs-in-swift/';
+        var disqus_script = 'embed.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = '//' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>
