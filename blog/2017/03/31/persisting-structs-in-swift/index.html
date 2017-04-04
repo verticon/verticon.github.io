@@ -9,8 +9,8 @@
   <meta name="author" content="Verticon">
 
   
-  <meta name="description" content="The insights and hard won lessons of an evolving human being / iOS developer.">
-  <meta name="keywords" content="programming,development,ios,swift">
+  <meta name="description" content="A technique for persisting structs (which cannot adopt the NSCoding protocol)">
+  <meta name="keywords" content="structs,persistence">
 
   <!-- http://t.co/dKP3o1e -->
   <meta name="HandheldFriendly" content="True">
@@ -116,7 +116,7 @@ extension Array where Element == Encodable.Properties {
 }
 </code></pre>
 
-<h3 id="persistence-with-user-defaults">Persistence With User Defaults</h3>
+<h3 id="persisting-to-user-defaults">Persisting to User Defaults</h3>
 <p>These top level functions will save/load arrays of Encodable objects to/from User Defaults. Note that loadFromFile’s type parameter specifies the type of the objects to be instantiated from each of the Encodable.Properties (i.e Dictionaries)</p>
 
 <pre><code>public func saveToUserDefaults&lt;T:Encodable&gt;(_ objects: [T], withKey key: String) {
@@ -128,7 +128,7 @@ public func loadFromUserDefaults&lt;T:Encodable&gt;(type: T.Type, withKey key: S
 }
 </code></pre>
 
-<h3 id="persistence-with-files">Persistence With Files</h3>
+<h3 id="persisting-to-a-file">Persisting to a File</h3>
 <p>These top level functions will save/load arrays of Encodable objects to/from a file in the document directory. Note that at this point we are able to use NSKeyedArchiver and NSKeyedUnarchiver because all of the items in the dictionaries are types that are known to NSKeyedArchiver and NSKeyedUnarchiver (i.e. Int, String, Double, etc).</p>
 
 <pre><code>public func saveToFile&lt;T:Encodable&gt;(_ values: [T], withName name: String) -&gt; Bool {
@@ -159,7 +159,7 @@ private func getUrl(forName: String) -&gt; URL {
 }
 </code></pre>
 
-<h2 id="an-example-of-an-encodable-type">An Example of an Encodable Type</h2>
+<h2 id="a-persistence-example">A Persistence Example</h2>
 
 <h3 id="the-encodable-type">The Encodable Type</h3>
 <p>Adopting the Encodable protocol is simple: <code>encode</code> writes the properties to a dictionary, <code>init</code> restores them from a dictionary.</p>
@@ -201,7 +201,7 @@ extension MyData: Encodable {
 }
 </code></pre>
 
-<h3 id="usage">Usage</h3>
+<h3 id="using-the-persistence-functions">Using the Persistence Functions</h3>
 <p>And, finally here is how instances of MyData can be persisted.</p>
 
 <pre><code>let myData = [MyData(int: 1, double: 1.0, string: "One", bool: true, date: Date(), blob: Data(bytes: [1,2,3,4,5,6,7,8])),
@@ -270,6 +270,12 @@ else {
 
 <time class='entry-date' datetime='2017-03-31T17:20:44-04:00'><span class='date'><span class='date-month'>Mar</span> <span class='date-day'>31</span><span class='date-suffix'>st</span>, <span class='date-year'>2017</span></span> <span class='time'>5:20 pm</span></time>
       
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/swift/'>swift</a>
+  
+</span>
 
 
     </p>

@@ -4,7 +4,7 @@
   <title><![CDATA[Adventures In iLand]]></title>
   <link href="http://verticon.github.io/atom.xml" rel="self"/>
   <link href="http://verticon.github.io/"/>
-  <updated>2017-04-04T13:07:59-04:00</updated>
+  <updated>2017-04-04T13:26:34-04:00</updated>
   <id>http://verticon.github.io/</id>
   <author>
     <name><![CDATA[Verticon]]></name>
@@ -53,7 +53,7 @@ extension Array where Element == Encodable.Properties {
 }
 </code></pre>
 
-<h3 id="persistence-with-user-defaults">Persistence With User Defaults</h3>
+<h3 id="persisting-to-user-defaults">Persisting to User Defaults</h3>
 <p>These top level functions will save/load arrays of Encodable objects to/from User Defaults. Note that loadFromFile’s type parameter specifies the type of the objects to be instantiated from each of the Encodable.Properties (i.e Dictionaries)</p>
 
 <pre><code>public func saveToUserDefaults&lt;T:Encodable&gt;(_ objects: [T], withKey key: String) {
@@ -65,7 +65,7 @@ public func loadFromUserDefaults&lt;T:Encodable&gt;(type: T.Type, withKey key: S
 }
 </code></pre>
 
-<h3 id="persistence-with-files">Persistence With Files</h3>
+<h3 id="persisting-to-a-file">Persisting to a File</h3>
 <p>These top level functions will save/load arrays of Encodable objects to/from a file in the document directory. Note that at this point we are able to use NSKeyedArchiver and NSKeyedUnarchiver because all of the items in the dictionaries are types that are known to NSKeyedArchiver and NSKeyedUnarchiver (i.e. Int, String, Double, etc).</p>
 
 <pre><code>public func saveToFile&lt;T:Encodable&gt;(_ values: [T], withName name: String) -&gt; Bool {
@@ -96,7 +96,7 @@ private func getUrl(forName: String) -&gt; URL {
 }
 </code></pre>
 
-<h2 id="an-example-of-an-encodable-type">An Example of an Encodable Type</h2>
+<h2 id="a-persistence-example">A Persistence Example</h2>
 
 <h3 id="the-encodable-type">The Encodable Type</h3>
 <p>Adopting the Encodable protocol is simple: <code>encode</code> writes the properties to a dictionary, <code>init</code> restores them from a dictionary.</p>
@@ -138,7 +138,7 @@ extension MyData: Encodable {
 }
 </code></pre>
 
-<h3 id="usage">Usage</h3>
+<h3 id="using-the-persistence-functions">Using the Persistence Functions</h3>
 <p>And, finally here is how instances of MyData can be persisted.</p>
 
 <pre><code>let myData = [MyData(int: 1, double: 1.0, string: "One", bool: true, date: Date(), blob: Data(bytes: [1,2,3,4,5,6,7,8])),
