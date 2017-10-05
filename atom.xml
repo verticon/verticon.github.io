@@ -4,7 +4,7 @@
   <title><![CDATA[Adventures In iLand]]></title>
   <link href="http://verticon.github.io/atom.xml" rel="self"/>
   <link href="http://verticon.github.io/"/>
-  <updated>2017-04-04T13:26:34-04:00</updated>
+  <updated>2017-10-05T14:55:47-04:00</updated>
   <id>http://verticon.github.io/</id>
   <author>
     <name><![CDATA[Verticon]]></name>
@@ -12,6 +12,352 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Swift Capture Lists]]></title>
+    <link href="http://verticon.github.io/blog/2017/09/27/swift-capture-lists/"/>
+    <updated>2017-09-27T14:55:19-04:00</updated>
+    <id>http://verticon.github.io/blog/2017/09/27/swift-capture-lists</id>
+    <content type="html"><![CDATA[<p>Closures capture (enclose) their environment. This is to say that a closure is able to access any variable that is visible from the context wherein the closure is defined. This remains true even if the closure is passed into another environment where from those variables are not visible (ex. a function defined in a different file). Capture lists provide a syntax for modifying the manner whereby a closure captures its environment.</p>
+
+<!-- more -->
+
+<h2 id="first-a-look-at-closures-without-capture-lists">First a Look at Closures Without Capture Lists</h2>
+
+<p>In order to understand capture lists we must first understand how a closure functions when no capture list has been declared. In the absence of a capture list, a closure accesses its environment’s variables through the use of pointers.[Caveat: I am using the word “pointer” because it works very well when discussing closure behavior. However, I have some uncertainty about whether or not it is the 100% technically correct term]. This is best illustrated with an example:</p>
+
+<div><script src="https://gist.github.com/4399100df8182eda310903fab4a6be43.js?file=ExampleOne.swift"></script>
+<noscript><pre><code>var i = 1
+let closure = { print(i) }
+closure()   // prints 1
+i = 2
+closure()   // prints 2
+</code></pre></noscript></div>
+
+<p>Note that the variable <em>name</em> has the value “verticon” at the time that the closure is defined. But if the value is changed and then the closure is again executed the new value is printed. The closure has a pointer to the variable and will always print its current value. Let’s do the same thing with a struct:</p>
+
+<div><script src="https://gist.github.com/4399100df8182eda310903fab4a6be43.js?file=ExampleTwo.swift"></script>
+<noscript><pre><code>struct Name {
+    let value: String
+}
+var my = Name(value: &quot;verticon&quot;)
+let closure = { print(my.value) }
+closure()   // prints verticon
+my = Name(value: &quot;morpheus&quot;)
+closure()   // prints morpheus
+
+</code></pre></noscript></div>
+
+<p>Again the closure has a pointer to the variable and will always print its current value.</p>
+
+<p>The first two examples used value types. Let’s see what happens with a reference type:</p>
+
+<div><script src="https://gist.github.com/4399100df8182eda310903fab4a6be43.js?file=ExampleThree.swift"></script>
+<noscript><pre><code>class Name {
+    var value : String
+    init(value : String) {
+        self.value = value
+    }
+}
+
+var ref = Name(value: &quot;verticon&quot;)
+let closure = { print(ref.value) }
+
+closure() // prints verticon
+
+ref = Name(value: &quot;morpheus&quot;)
+
+closure() // prints morpheus
+
+</code></pre></noscript></div>
+
+<p>This example takes a bit more thought. The variable <em>name</em> refers to a Name type. Its value is a reference to an actual instance of the Name type. The closure has a pointer to <em>name</em>. When the closure dereferences that pointer it obtains <em>name’s</em> current value, a references to a Name instance. Just as in the previous two examples the closure always prints the current value of the variable.</p>
+
+<h2 id="on-to-capture-lists">On To Capture Lists</h2>
+
+<p>The syntax of a capture list is [variable1, variable2, …, variableN] The comma separated list of items inside of the square brackets are the names of variables from the environment - those variables will have their capture semantics altered. Here are some examples of closure declarations that specify a capture list:</p>
+
+<pre><code>let value = 1
+let closure1 = { [value] in return value }
+let closure2 = { [value] (i: Int) in return i * value }
+let closure3 = { [value] (i: Int) -&gt; Bool in return i &gt; value }
+</code></pre>
+
+<p>A capture list must occur at the start of a closure declaration and the closure declaration must, at a minimum, include the <code>in</code> keyword. Strangely, the following declaration compiles but the capture semantics of the variable <em>value</em> are not altered:</p>
+
+<pre><code>let closure1 = { [value]
+    return value }
+</code></pre>
+
+<p>The following, however, works as expected:</p>
+
+<pre><code>let closure1 = { [value] in
+    return value }
+</code></pre>
+
+<p>It feels like a compiler bug. I am using Swift 3.1</p>
+
+<p>So what do we mean when we say that the variables specified in the capture list have their capture semantics altered? We mean this: the closure will no longer capture a pointer to the variable; instead it will capture the value that the variable has at the time that the closure is created. If the variable’s value is subsequently changed then the closure will continue to execute with the old value. To see this in action let’s revisit our previous examples, modified by specifying a capture list.</p>
+
+<div><script src="https://gist.github.com/4399100df8182eda310903fab4a6be43.js?file=ExampleOneRevisited.swift"></script>
+<noscript><pre><code>var i = 1
+let closure = { [i] in print(i) }
+closure()   // prints 1
+i = 2
+closure()   // prints 1</code></pre></noscript></div>
+
+<div><script src="https://gist.github.com/4399100df8182eda310903fab4a6be43.js?file=ExampleTwoRevisited.swift"></script>
+<noscript><pre><code>struct Name {
+    let value: String
+}
+
+var my = Name(value: &quot;verticon&quot;)
+let closure = { [my] in print(my.value) }
+closure()   // prints verticon
+my = Name(value: &quot;morpheus&quot;)
+closure()   // prints verticon</code></pre></noscript></div>
+
+<div><script src="https://gist.github.com/4399100df8182eda310903fab4a6be43.js?file=ExampleThreeRevisited.swift"></script>
+<noscript><pre><code>class Name : CustomStringConvertible {
+    var value : String
+    init(value : String) {
+        self.value = value
+    }
+    var description: String {
+        return value
+    }
+}
+
+var ref = Name(value: &quot;verticon&quot;)
+let closure = { [ref] in print(ref) }
+closure() // prints verticon
+ref = Name(value: &quot;morpheus&quot;)
+closure() // prints verticon</code></pre></noscript></div>
+
+<p>In each case the value printed by the closure does not change when the value of the variable is changed. This is because the closure has captured the variable’s value instead of a pointer to it. Pretty straight forward, yes?</p>
+
+<h2 id="but-wait-theres-more">But Wait, There’s More</h2>
+
+<p>Something to realize about closures is that they are reference type objects. This means that they, just like class objects, remain in existence until their reference count goes to zero. And, <em>this is important</em>, any objects referenced by the closure cannot be deallocated as long as the closure remains in existence. Unless, that is, we take steps to prevent that from occurring - more about that as we go along.</p>
+
+<p>Let’s introduce the code that we will use to explore the object retention behavior of closures. [Note: This code is ready to run in a playground]</p>
+
+<div><script src="https://gist.github.com/4399100df8182eda310903fab4a6be43.js?file=ReferenceRetention.swift"></script>
+<noscript><pre><code>import Foundation
+import PlaygroundSupport
+
+class Executor {
+
+    typealias Closure = () -&gt; Void
+    private var closure: Closure?
+    private var counter = 0
+
+    init(closure: @escaping Closure) {
+        self.closure = closure
+
+        let timer = Timer(timeInterval: 1.00, target: self, selector: #selector(execute), userInfo: nil, repeats: true)
+        RunLoop.main.add(timer, forMode: RunLoopMode.commonModes)
+    }
+    
+    @objc private func execute() {
+        if let closure = closure {
+            closure()
+            counter += 1
+            if counter == 5 { self.closure = nil }
+        }
+    }
+}
+
+class Closure {
+
+    class Name : CustomStringConvertible {
+        let name: String
+        init(_ name: String) { self.name = name }
+        deinit { print(&quot;Name deallocated: \(name)&quot;) }
+        var description: String { return name }
+    }
+
+    var name: Name
+
+    init(name: Name) {
+        self.name = name
+
+        let closure = { [name = name.name] in print(&quot;\(name)&#39;s closure executed&quot;) }
+        _ = Executor(closure: closure)
+    }
+    
+    deinit { print(&quot;Closure deallocated: \(name)&quot;) }
+}
+
+do {
+    let closure = Closure(name: Closure.Name(&quot;Verticon&quot;))
+}
+
+PlaygroundPage.current.needsIndefiniteExecution = true
+</code></pre></noscript></div>
+
+<p>The Creator class creates a closure and hands it to an Executor for execution. We’ll be using a Creator instance to look into the retention consequences of the closure accessing the Creator’s members. The Creator contains several versions of the closure which we will be commenting/uncommenting in order to observe the differences</p>
+
+<p>The Executor class stores a closure, thus keeping it “alive”. It uses a timer to periodically execute the closure, continuing to do so until “something” (such as our Controller) sets the closure to nil.</p>
+
+<p>The Controller class sets things into motion by instantiating a Creator. It also presents a UI with two buttons: one is used to set the Creator variable to nil; the other is used to set the Executor’s closure variable to nil.</p>
+
+<h4 id="closure-version-1">Closure version 1</h4>
+
+<pre><code>let closure = { log("\n\(name)'s closure executed") } // Version 1
+</code></pre>
+
+<p>Here the value of the initializer’s <code>nameArg</code> argument is captured. This has no retention consequences and hence the Creator and its Name are immediately deallocated when the deallocate creator button is pressed. The closure “lives on” and continues to execute until the deallocate closure button is pressed.</p>
+
+<pre><code>Verticon's closure executed 2017-10-04 20:17:04 +0000
+
+Verticon's closure executed 2017-10-04 20:17:06 +0000
+
+Deallocate creator button pressed 2017-10-04 20:17:07 +0000
+Creator deallocated 2017-10-04 20:17:07 +0000
+Name deallocated 2017-10-04 20:17:07 +0000
+
+Verticon's closure executed 2017-10-04 20:17:08 +0000
+
+Verticon's closure executed 2017-10-04 20:17:10 +0000
+
+Deallocate closure button pressed 2017-10-04 20:17:11 +0000
+Closure deallocated 2017-10-04 20:17:11 +0000
+</code></pre>
+
+<h4 id="closure-version-2">Closure version 2</h4>
+
+<pre><code>  let closure = { [name = self.storedName.name] in log("\n\(name)'s closure executed") } // Version 2
+</code></pre>
+
+<p>Here we’ve introduced a new capture list syntax. It turns out that a capture list allows us to declare new variables for use by the closure. Here we’ve created the <code>name</code> variable so that the closure can print the name without having to reference the Creator or Name class instances. The results are exactly the same as for version 1</p>
+
+<h4 id="closure-version-3">Closure version 3</h4>
+
+<p>let closure = { [name = self.storedName] in log(“\n(name)’s closure executed”) } // Version 3</p>
+
+<p>This time the closure is referencing the storeName instance [we are again declaring a local variable so that the closure will not need to reference <code>self</code>]. This results in the deallocation of the Name instance being delayed until the closure is deallocated.</p>
+
+<pre><code>Verticon's closure executed 2017-10-04 20:30:28 +0000
+
+Verticon's closure executed 2017-10-04 20:30:30 +0000
+
+Deallocate creator button pressed 2017-10-04 20:30:31 +0000
+Creator deallocated 2017-10-04 20:30:31 +0000
+
+Verticon's closure executed 2017-10-04 20:30:32 +0000
+
+Verticon's closure executed 2017-10-04 20:30:34 +0000
+
+Deallocate closure button pressed 2017-10-04 20:30:35 +0000
+Closure deallocated 2017-10-04 20:30:35 +0000
+Name deallocated 2017-10-04 20:30:35 +0000
+</code></pre>
+
+<h4 id="closure-version-4">Closure version 4</h4>
+
+<pre><code>let closure = { log("\n\(self.storedName)'s closure executed") } // Version 4
+</code></pre>
+
+<p>This time the closure is referencing both the Name and Creator instances resulting in both deallocations being delayed until the the closure is deallocated.</p>
+
+<p>[An ancillary inquiry: In version 4, what has the closure captured? A pointer to self? If yes then what is it about capturing a pointer to a reference variable that causes the reference’s count to be incremented? These thoughts led to my initial caveat regarding the use of the word “pointer”.]</p>
+
+<pre><code>Verticon's closure executed 2017-10-04 20:35:39 +0000
+
+Verticon's closure executed 2017-10-04 20:35:41 +0000
+
+Deallocate creator button pressed 2017-10-04 20:35:42 +0000
+
+Verticon's closure executed 2017-10-04 20:35:43 +0000
+
+Verticon's closure executed 2017-10-04 20:35:45 +0000
+
+Deallocate closure button pressed 2017-10-04 20:35:46 +0000
+Closure deallocated 2017-10-04 20:35:46 +0000
+Creator deallocated 2017-10-04 20:35:46 +0000
+Name deallocated 2017-10-04 20:35:46 +0000
+</code></pre>
+
+<h2 id="fine-but-so-what">Fine But So What?</h2>
+
+<p>Okay, we’ve seen that a closure can cause an object’s reference count to increase but why do we care? Well, in the case of the Creator/Executor/Controller example the Controller can access the variable that holds the closure reference and nil it when needed, but what if this is not the case? What if we release the closure <em>out into the wild</em> by invoking a function such as this:</p>
+
+<pre><code>func doSomething(with: @escaping () -&gt; Void)
+</code></pre>
+
+<p>The @escaping attribute tells us that the function is going to store the closure reference. Now the closure is <em>living out there somewhere</em> and there is nothing that we can do about. There is, however, something that we can do so that this scenario does not prevent us from deallocating the objects to which the closure refers: we can use a capture list to declare that the closure’s references are <code>weak</code>.</p>
+
+<h4 id="closure-version-5">Closure version 5</h4>
+
+<pre><code>let closure = { [weak self] in log("\n\(self?.storedName.name ?? "NoName")'s closure executed") } // Version 5
+</code></pre>
+
+<p>Now when the Deallocate Creator button is pressed the Creator and the Name are immediately deallocated even though the closure is still alive.</p>
+
+<pre><code>Verticon's closure executed 2017-10-05 16:22:30 +0000
+
+Verticon's closure executed 2017-10-05 16:22:32 +0000
+
+Deallocate creator button pressed 2017-10-05 16:22:33 +0000
+Creator deallocated 2017-10-05 16:22:33 +0000
+Name deallocated 2017-10-05 16:22:33 +0000
+
+NoName's closure executed 2017-10-05 16:22:34 +0000
+
+NoName's closure executed 2017-10-05 16:22:36 +0000
+
+Deallocate closure button pressed 2017-10-05 16:22:38 +0000
+Closure deallocated 2017-10-05 16:22:38 +0000
+</code></pre>
+
+<p>There is one other option that we have for preventing a closure from holding a strong reference: we can use the <code>unowned</code> attribute instead of the <code>weak</code> attribute. The <code>unowned</code> attribute has the advantage of not being checked for nil (rather like an implicitly unwrapped optional) and therefor results in faster executing code (which might matter). However, in order to use <code>unowned</code> we must be certain that our code meets a certain criteria: we must guarantee that the closure will never again be executed after the object being referenced has been deallocated. Like <code>weak</code>, <code>unowned</code> will allow the object to be deallocated but like an implicitly unwrapped optional it will cause the program to trap if it is used after being set to nil (the system sets weak and unowned references to nil when the object being referenced is deallocated).</p>
+
+<h4 id="closure-version-6">Closure version 6</h4>
+
+<pre><code>let closure = { [unowned self] in log("\n\(self.storedName)'s closure executed") } // Version 6
+</code></pre>
+
+<p>When the Deallocate Creator button is pressed the program crashes. [In a playground this is evidenced by the Controller disappearing from the Timeline Assistant Editor and a home screen appearing] However, if we first press the Deallocate Closure button then all is well. Here is a less contrived example wherein <code>unowned</code> is used successfully:</p>
+
+<div><script src="https://gist.github.com/4399100df8182eda310903fab4a6be43.js?file=UnownedSelf.swift"></script>
+<noscript><pre><code>protocol Notifier {
+    typealias Client = (Data) -&gt; Void
+    typealias Token = Any
+    
+    func register(client: Client) -&gt; Token
+    
+    // The previously registered Consumer is discarded
+    func deregister(token: Token)
+}
+
+class Registrant {
+    private let name: String
+    private let notifier: Notifier
+    private var token: Notifier.Token? = nil
+    
+    init(name: String, notifier: Notifier) {
+        self.name = name
+        self.notifier = notifier
+        
+        token = notifier.register { [unowned self] (data: Data) in
+            print(&quot;\(self.name) has been notified: \(data)&quot;)
+        }
+    }
+    
+    deinit {
+        if let token = token {
+            notifier.deregister(token: token)
+        }
+    }
+}
+</code></pre></noscript></div>
+
+<h2 id="conclusion">Conclusion</h2>
+
+<p>Alright, there we have it. When we write closures we can capture variables with confidence.</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Persisting Structs in Swift]]></title>
