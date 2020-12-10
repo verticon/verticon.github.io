@@ -4,7 +4,7 @@
   <title><![CDATA[Adventures In iLand]]></title>
   <link href="http://verticon.github.io/atom.xml" rel="self"/>
   <link href="http://verticon.github.io/"/>
-  <updated>2017-10-05T14:55:47-04:00</updated>
+  <updated>2020-12-10T13:14:35-05:00</updated>
   <id>http://verticon.github.io/</id>
   <author>
     <name><![CDATA[Verticon]]></name>
@@ -14,10 +14,10 @@
 
   
   <entry>
-    <title type="html"><![CDATA[Swift Capture Lists]]></title>
-    <link href="http://verticon.github.io/blog/2017/09/27/swift-capture-lists/"/>
-    <updated>2017-09-27T14:55:19-04:00</updated>
-    <id>http://verticon.github.io/blog/2017/09/27/swift-capture-lists</id>
+    <title type="html"><![CDATA[Swift Capture Lists Rock]]></title>
+    <link href="http://verticon.github.io/blog/2020/11/17/swift-capture-lists/"/>
+    <updated>2020-11-17T14:55:19-04:00</updated>
+    <id>http://verticon.github.io/blog/2020/11/17/swift-capture-lists</id>
     <content type="html"><![CDATA[<p>Closures capture (enclose) their environment. This is to say that a closure is able to access any variable that is visible from the context wherein the closure is defined. This remains true even if the closure is passed into another environment where from those variables are not visible (ex. a function defined in a different file). Capture lists provide a syntax for modifying the manner whereby a closure captures its environment.</p>
 
 <!-- more -->
@@ -361,9 +361,9 @@ class Registrant {
   
   <entry>
     <title type="html"><![CDATA[Persisting Structs in Swift]]></title>
-    <link href="http://verticon.github.io/blog/2017/03/31/persisting-structs-in-swift/"/>
-    <updated>2017-03-31T17:20:44-04:00</updated>
-    <id>http://verticon.github.io/blog/2017/03/31/persisting-structs-in-swift</id>
+    <link href="http://verticon.github.io/blog/2020/11/11/persisting-structs-in-swift/"/>
+    <updated>2020-11-11T17:20:44-04:00</updated>
+    <id>http://verticon.github.io/blog/2020/11/11/persisting-structs-in-swift</id>
     <content type="html"><![CDATA[<p>My journey through iLand recently brought me to the place whereat I needed to persist the data records being created by my application. My first thought was Core Data. But then <a href="http://nshipster.com/nscoding/">NSHipster</a> helped me to realize that NSCoding would be a better choice for my situation. Great! Off I go. But darn! The NSCoding protocol is restricted to class types and I am using structs (and want them for their value semantics). What to do? After some looking around, <a href="http://redqueencoder.com/property-lists-and-user-defaults-in-swift/">The Red Queen Coder</a> (TL;DR sorry Red Queen) came to my rescue. I liked the Red Queen’s approach but was not very satisfied with the implementation. I would like to present the results of my tweaking and polishing.</p>
 
 <!-- more -->
@@ -541,9 +541,9 @@ else {
   
   <entry>
     <title type="html"><![CDATA[What Does FlatMap Flatten and What Does Flatten Mean?]]></title>
-    <link href="http://verticon.github.io/blog/2017/03/02/what-does-flatmap-flatten/"/>
-    <updated>2017-03-02T19:37:48-05:00</updated>
-    <id>http://verticon.github.io/blog/2017/03/02/what-does-flatmap-flatten</id>
+    <link href="http://verticon.github.io/blog/2020/11/02/what-does-flatmap-flatten/"/>
+    <updated>2020-11-02T19:37:48-05:00</updated>
+    <id>http://verticon.github.io/blog/2020/11/02/what-does-flatmap-flatten</id>
     <content type="html"><![CDATA[<p>FlatMap, and its close cousin map, are two of the higher order functions (i.e. functions that accept and/or return other functions) that are declared by the Sequence protocol. Today I’m going to share what I have learned about flatMap. I’ll address the questions: What does flatMap flatten? What does flatten mean?</p>
 
 <!-- more -->
@@ -773,9 +773,9 @@ Result is Array&lt;Int&gt; = [1, 2, 4]
   
   <entry>
     <title type="html"><![CDATA[What the Heck Is Type Erasure and Why Should We Care?]]></title>
-    <link href="http://verticon.github.io/blog/2017/01/24/what-the-heck-is-type-erasure/"/>
-    <updated>2017-01-24T17:14:59-05:00</updated>
-    <id>http://verticon.github.io/blog/2017/01/24/what-the-heck-is-type-erasure</id>
+    <link href="http://verticon.github.io/blog/2020/10/27/what-the-heck-is-type-erasure/"/>
+    <updated>2020-10-27T17:14:59-05:00</updated>
+    <id>http://verticon.github.io/blog/2020/10/27/what-the-heck-is-type-erasure</id>
     <content type="html"><![CDATA[<p>We are all unique individuals whose minds process and organize information in different ways, and whose communication styles reflect that internal organization. When I first encountered the words <strong>Type Erasure</strong> I thought: <em>“Oh, some cool swifty thing. I’d better find out about it”</em>. So, I started googling and reading. But, time and again, I came up short. Even though I (mostly) understood what I had read, my understanding felt incomplete. There seemed to be something missing, as though the author had not made some essential concept clear. However, I persevered and now I get it. So for this, my first ever blog post, I’m going to take a shot at explaining type erasure. Maybe it will help someone else who thinks differently.</p>
 
 <!-- more -->

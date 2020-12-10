@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Higher Order Functions | Adventures In iLand]]></title>
   <link href="http://verticon.github.io/blog/categories/higher-order-functions/atom.xml" rel="self"/>
   <link href="http://verticon.github.io/"/>
-  <updated>2017-10-05T14:55:47-04:00</updated>
+  <updated>2020-12-10T13:14:35-05:00</updated>
   <id>http://verticon.github.io/</id>
   <author>
     <name><![CDATA[Verticon]]></name>
@@ -15,9 +15,9 @@
   
   <entry>
     <title type="html"><![CDATA[What Does FlatMap Flatten and What Does Flatten Mean?]]></title>
-    <link href="http://verticon.github.io/blog/2017/03/02/what-does-flatmap-flatten/"/>
-    <updated>2017-03-02T19:37:48-05:00</updated>
-    <id>http://verticon.github.io/blog/2017/03/02/what-does-flatmap-flatten</id>
+    <link href="http://verticon.github.io/blog/2020/11/02/what-does-flatmap-flatten/"/>
+    <updated>2020-11-02T19:37:48-05:00</updated>
+    <id>http://verticon.github.io/blog/2020/11/02/what-does-flatmap-flatten</id>
     <content type="html"><![CDATA[<p>FlatMap, and its close cousin map, are two of the higher order functions (i.e. functions that accept and/or return other functions) that are declared by the Sequence protocol. Today I’m going to share what I have learned about flatMap. I’ll address the questions: What does flatMap flatten? What does flatten mean?</p>
 
 <!-- more -->
