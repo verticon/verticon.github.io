@@ -1,4 +1,22 @@
 <ul class="main-navigation">
+  {% if site.show_about %}  
+  <li><a href="{{ root_url }}/about">About</a></li>
+  {% endif %}  
   <li><a href="{{ root_url }}/">Blog</a></li>
   <li><a href="{{ root_url }}/blog/archives">Archives</a></li>
+  {% if site.show_develop %}  
+  <li><a href="{{ root_url }}/develop">Develop</a></li>
+  {% endif %}  
+</ul>
+
+<ul class="subscription">
+  <li><a rel="me" href="https://www.github.com/verticon/">
+      <img src="{{ root_url }}/images/github.png" width="24" height="24" style="right" alt="Verticon on GitHub">
+  </a></li>
+  <li><a rel="me" href="http://twitter.com/VerticonRising">
+      <img src="{{ root_url }}/images/twitter.png" width="24" height="24" style="right" alt="Verticon on Twitter">
+  </a></li>
+  <li><a rel="me" href="https://www.instagram.com/verticon.rising/">
+      <img src="{{ root_url }}/images/instagram.png" width="24" height="24" style="right" alt="Verticon on Instagram">
+  </a></li>
 </ul>

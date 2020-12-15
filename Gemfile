@@ -1,10 +1,11 @@
 source "https://rubygems.org"
 
 group :development do
-  gem 'rake', '~> 10.0'
-  gem 'jekyll', '~> 2.0'
+  gem 'rake', '~> 12.0'
+  gem 'jekyll', '> 2.0'
   gem 'octopress-hooks', '~> 2.2'
   gem 'octopress-date-format', '~> 2.0'
+  gem 'octopress-social'
   gem 'jekyll-sitemap'
   gem 'kramdown', '~> 1.13'
   gem 'RedCloth', '~> 4.2.9'
@@ -13,6 +14,7 @@ group :development do
   gem 'sass-globbing', '~> 1.0.0'
   gem 'rb-fsevent', '~> 0.9'
   gem 'stringex', '~> 1.4.0'
+  gem 'yt'
 end
 
 gem 'sinatra', '~> 1.4.2'

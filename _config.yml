@@ -16,7 +16,6 @@ keywords: programming,development,ios,swift
 # Additionally, %o will give you the ordinal representation of the day
 date_format: "ordinal"
 
-show_rss: false
 
 # RSS / Email (optional) subscription links (change if using something like Feedburner)
 subscribe_rss: /atom.xml
@@ -66,13 +65,15 @@ default_asides: [asides/recent_posts.html, asides/github.html, asides/delicious.
 # ----------------------- #
 
 # Github repositories
-github_user:
-github_repo_count: 0
+github_user: verticon 
+github_repo_count: 2    # 0 for all
 github_show_profile_link: true
 github_skip_forks: true
+#profile_link_text:  :username on GitHub
+#profile_link_title: :username on GitHub
 
 # Twitter
-twitter_user:
+twitter_user: VerticonRising
 twitter_tweet_button: true
 
 # Google +1
@@ -101,3 +102,18 @@ google_analytics_tracking_id:
 
 # Facebook Like
 facebook_like: false
+
+
+# ----------------------- #
+#   Robert's Additions    #
+# ----------------------- #
+
+youtube:
+  api_key: AIzaSyDSyzTCBI9MIMRrLXRaz1CjWwsruCEEZ88
+
+show_rss: false
+
+show_about: true
+
+show_develop: true
+

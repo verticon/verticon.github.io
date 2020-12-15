@@ -1,3 +1,18 @@
+"bundle exec rake new_post["What Does Flatmap Flatten?"]" creates a new blog post
+
+"bundle exec rake new_page["about"]" creates source/about/index.markdown
+
+"bundle exec rake generate" generates the public folder from the source folder. 
+
+"bundle exec rake watch" watches the source folder and generates the public folder when changes occur.
+Apparently, this watch functionality does not apply to _config.yml. Stop the watch and use generate explicitly
+
+"bundle exec rake preview" does what watch does and additionally runs a local server - http://localhost:4000. 
+
+"bundle exec rake deploy" copies the public folder to the _deploy folder, commits the changes, and pushes them to github.
+
+******************************************************************************************************************
+
 The root directory (verticon.io) has a .git folder. Here the branch is set to source which is where we save the site source.
 
 ~/verticon.io$git remote -v
@@ -9,7 +24,8 @@ origin	https://github.com/verticon/verticon.github.io.git (push)
 * source
 
 
-The _deploy sub-directory also has a .git folder. Here the branch is set to master which is where we save the generated site and which is the repo branch that github pages uses to display the site.
+The _deploy sub-directory also has a .git folder. Here the branch is set to master which is where
+we save the generated site and which is the repo branch that github pages uses to display the site.
 
 ~/verticon.io$cd _deploy
 ~/verticon.io/_deploy$git remote -v
@@ -18,11 +34,8 @@ origin	https://github.com/verticon/verticon.github.io.git (push)
 ~/verticon.io/_deploy$git branch
 * master
 
-******************************************************************************************************************
-
-"rake generate" generates the public folder from the source folder.
-
-"rake deploy" copies the public folder to the _deploy folder, commits the changes nd pushes them to github.
+This is informative:
+    https://stackoverflow.com/questions/28511946/the-tag-img-is-not-a-recognized-liquid-tag-github-pages-with-octopress
 
 ******************************************************************************************************************
 
@@ -41,9 +54,11 @@ hint: its remote counterpart. Integrate the remote changes (e.g.
 hint: 'git pull ...') before pushing again.
 hint: See the 'Note about fast-forwards' in 'git push --help' for details.
 
-The local and remote masters had gotten out of sync becuase the CNAME file had been added on the github side. I fixed it by changing into _deploy and issuing "git pull origin master". I read that "git reset --hard origin/master" would also work.
+The local and remote masters had gotten out of sync becuase the CNAME file had been added on the github side.
+I fixed it by changing into _deploy and issuing "git pull origin master". I read that "git reset --hard origin/master" would also work.
 
-However, because "rake deploy" removes all of the files from the _deploy directory CNAME was lost and had to be recreated on the github side which just set up the same scenario again. The ultimate fix was to add CNAME to the source folder.
+However, because "rake deploy" removes all of the files from the _deploy directory CNAME was lost and had to be
+recreated on the github side which just set up the same scenario again. The ultimate fix was to add CNAME to the source folder.
 
 ******************************************************************************************************************
 
@@ -65,7 +80,7 @@ $('document').ready(function() {
 I got rid of the RSS feed button
 
 1) I added a show_rss variable to _config.yml
-2) I modified navigation.html so as to optionally show the button based on the show_rss setting
+2) I modified source/_includes/navigation.html so as to optionally show the button based on the show_rss setting
 
 ******************************************************************************************************************
 
@@ -82,5 +97,25 @@ I modified the Rakefile's new_post task so that the yaml front matter would incl
 
 I added a keywords entry to _config.yml. I then modified source/_include/head.html to use the site description 
 and keywords if they are not specified by the page.
+
+******************************************************************************************************************
+
+I added social media integration
+
+1. Insalled the octopress-social gem
+
+******************************************************************************************************************
+
+I added the ability to play youtube videos by installing https://github.com/erossignon/jekyll-youtube-lazyloading
+I obtained the required youtube API key by following these instructions: https://www.slickremix.com/docs/get-api-key-for-youtube/
+
+Jekyll would not generate the site:
+    Liquid Exception: No such file or directory @ dir_s_mkdir - .jekyll-cache/youtube in about/index.markdown
+
+I ended up going to https://github.com/optikfluffel/octopress-responsive-video-embed to obtain youtube.rb and _rve.scss
+I'm fairly certain that erossognon's work used optikfluffe's work as a starting point. optikfluffel's instructions do not
+say anything about the YouTibe API key nor the yt gem, however I left these in place as per erossignon's instructions
+
+******************************************************************************************************************
 
 ******************************************************************************************************************
